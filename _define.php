@@ -18,7 +18,7 @@ $this->registerModule(
     'alias',
     "Create aliases of your blog's URLs",
     'Olivier Meunier and contributors',
-    '1.3-dev',
+    '1.3',
     [
         'requires'    => [['core', '2.24']],
         'permissions' => dcAuth::PERMISSION_ADMIN,
