@@ -11,7 +11,7 @@
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 if (!defined('DC_RC_PATH')) {
-    return null;
+    return;
 }
 
-Clearbricks::lib()->autoload(['dcAliases' => __DIR__ . '/inc/class.dc.aliases.php']);
+dcCore::app()->resources['help']['alias'] = __DIR__ . '/help/help.html';

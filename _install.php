@@ -1,44 +1,51 @@
 <?php
-# -- BEGIN LICENSE BLOCK ----------------------------------
-#
-# This file is part of Dotclear 2.
-#
-# Copyright (c) 2003-2008 Olivier Meunier and contributors
-# Licensed under the GPL version 2.0 license.
-# See LICENSE file or
-# http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-#
-# -- END LICENSE BLOCK ------------------------------------
-if (!defined('DC_CONTEXT_ADMIN')) { return; }
-
-$version = $core->plugins->moduleInfo('alias','version');
-
-if (version_compare($core->getVersion('alias'),$version,'>=')) {
-	return;
+/**
+ * @brief alias, a plugin for Dotclear 2
+ *
+ * @package Dotclear
+ * @subpackage Plugin
+ *
+ * @author Olivier Meunier and contributors
+ *
+ * @copyright Jean-Crhistian Denis
+ * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
+ */
+if (!defined('DC_CONTEXT_ADMIN')) {
+    return null;
 }
 
-/* Database schema
--------------------------------------------------------- */
-$s = new dbStruct($core->con,$core->prefix);
+$version = dcCore::app()->plugins->moduleInfo('alias', 'version');
 
-$s->alias
-	->blog_id('varchar',32,false)
-	->alias_url('varchar',255,false)
-	->alias_destination('varchar',255,false)
-	->alias_position('smallint',0,false,1)
-	
-	->primary('pk_alias','blog_id','alias_url')
-	
-	->index('idx_alias_blog_id','btree','blog_id')
-	->index('idx_alias_blog_id_alias_position','btree','blog_id','alias_position')
-	
-	->reference('fk_alias_blog','blog_id','blog','blog_id','cascade','cascade')
-	;
+if (version_compare(dcCore::app()->getVersion('alias'), $version, '>=')) {
+    return null;
+}
 
-# Schema installation
-$si = new dbStruct($core->con,$core->prefix);
-$changes = $si->synchronize($s);
+try {
+    $s = new dbStruct(dcCore::app()->con, dcCore::app()->prefix);
 
-$core->setVersion('alias',$version);
-return true;
-?>
+    $s->alias
+        ->blog_id('varchar', 32, false)
+        ->alias_url('varchar', 255, false)
+        ->alias_destination('varchar', 255, false)
+        ->alias_position('smallint', 0, false, 1)
+
+        ->primary('pk_alias', 'blog_id', 'alias_url')
+
+        ->index('idx_alias_blog_id', 'btree', 'blog_id')
+        ->index('idx_alias_blog_id_alias_position', 'btree', 'blog_id', 'alias_position')
+
+        ->reference('fk_alias_blog', 'blog_id', 'blog', 'blog_id', 'cascade', 'cascade')
+    ;
+
+    # Schema installation
+    $si      = new dbStruct(dcCore::app()->con, dcCore::app()->prefix);
+    $changes = $si->synchronize($s);
+
+    dcCore::app()->setVersion('alias', $version);
+
+    return true;
+} catch (Exception $e) {
+    dcCore::app()->error->add($e->getMessage());
+}
+
+return false;

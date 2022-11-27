@@ -1,90 +1,70 @@
 <?php
-# -- BEGIN LICENSE BLOCK ----------------------------------
-#
-# This file is part of Dotclear 2.
-#
-# Copyright (c) 2003-2008 Olivier Meunier and contributors
-# Licensed under the GPL version 2.0 license.
-# See LICENSE file or
-# http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-#
-# -- END LICENSE BLOCK ------------------------------------
-if (!defined('DC_CONTEXT_ADMIN')) { return; }
-
-$core->addBehavior('exportFull',array('aliasBehaviors','exportFull'));
-$core->addBehavior('exportSingle',array('aliasBehaviors','exportSingle'));
-$core->addBehavior('importInit',array('aliasBehaviors','importInit'));
-$core->addBehavior('importFull',array('aliasBehaviors','importFull'));
-$core->addBehavior('importSingle',array('aliasBehaviors','importSingle'));
-
-$_menu['Plugins']->addItem(__('Aliases'),'plugin.php?p=alias','index.php?pf=alias/icon.png',
-	preg_match('/plugin.php\?p=alias(&.*)?$/',$_SERVER['REQUEST_URI']),
-	$core->auth->check('admin',$core->blog->id));
-
-if (!isset($__resources['help']['alias'])) {
-	$__resources['help']['alias'] = dirname(__FILE__).'/locales/en/help.html';
-	
-	if (file_exists(dirname(__FILE__).'/locales/'.$_lang.'/help.html')) {
-		$__resources['help']['alias'] = dirname(__FILE__).'/locales/'.$_lang.'/help.html';
-	}
+/**
+ * @brief alias, a plugin for Dotclear 2
+ *
+ * @package Dotclear
+ * @subpackage Plugin
+ *
+ * @author Olivier Meunier and contributors
+ *
+ * @copyright Jean-Crhistian Denis
+ * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
+ */
+if (!defined('DC_CONTEXT_ADMIN')) {
+    return null;
 }
 
-# Behaviors
-class aliasBehaviors
-{
-	public static function exportFull($core,$exp)
-	{
-		$exp->exportTable('alias');
-	}
+dcCore::app()->menu[dcAdmin::MENU_PLUGINS]->addItem(
+    __('Aliases'),
+    dcCore::app()->adminurl->get('admin.plugin.alias'),
+    dcPage::getPF('alias/icon.png'),
+    preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.alias')) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
+    dcCore::app()->auth->check(dcAuth::PERMISSION_ADMIN, dcCore::app()->blog->id)
+);
 
-	public static function exportSingle($core,$exp,$blog_id)
-	{
-		$exp->export('alias',
-			'SELECT alias_url, alias_destination, alias_position '.
-			'FROM '.$core->prefix.'alias A '.
-			"WHERE A.blog_id = '".$blog_id."'"
-		);
-	}
+dcCore::app()->addBehavior('exportFullV2', function ($exp) {
+    $exp->exportTable('alias');
+});
 
-	public static function importInit($bk,$core)
-	{
-		$bk->cur_alias = $core->con->openCursor($core->prefix.'alias');
-		$bk->alias = new dcAliases($core);
-		$bk->aliases = $bk->alias->getAliases();
-	}
+dcCore::app()->addBehavior('exportSingleV2', function ($exp, $blog_id) {
+    $exp->export(
+        'alias',
+        'SELECT alias_url, alias_destination, alias_position ' .
+        'FROM ' . dcCore::app()->prefix . 'alias A ' .
+        "WHERE A.blog_id = '" . $blog_id . "'"
+    );
+});
 
-	public static function importFull($line,$bk,$core)
-	{
-		if ($line->__name == 'alias')
-		{
-			$bk->cur_alias->clean();
+dcCore::app()->addBehavior('importInitV2', function ($bk) {
+    $bk->cur_alias = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'alias');
+    $bk->alias     = new dcAliases();
+    $bk->aliases   = $bk->alias->getAliases();
+});
 
-			$bk->cur_alias->blog_id = (string) $line->blog_id;
-			$bk->cur_alias->alias_url = (string) $line->alias_url;
-			$bk->cur_alias->alias_destination = (string) $line->alias_destination;
-			$bk->cur_alias->alias_position = (integer) $line->alias_position;
+dcCore::app()->addBehavior('importFullV2', function ($line, $bk) {
+    if ($line->__name == 'alias') {
+        $bk->cur_alias->clean();
 
-			$bk->cur_alias->insert();
-		}
-	}
+        $bk->cur_alias->blog_id           = (string) $line->blog_id;
+        $bk->cur_alias->alias_url         = (string) $line->alias_url;
+        $bk->cur_alias->alias_destination = (string) $line->alias_destination;
+        $bk->cur_alias->alias_position    = (int) $line->alias_position;
 
-	public static function importSingle($line,$bk,$core)
-	{
-		if ($line->__name == 'alias')
-		{
-			$found = false;
-			foreach ($bk->aliases as $v)
-			{
-				if ($v['alias_url'] == $line->alias_url) {
-					$found = true;
-				}
-			}
-			if ($found) {
-				$bk->alias->deleteAlias($line->alias_url);
-			}
-			$bk->alias->createAlias($line->alias_url,$line->alias_destination,$line->alias_position);
-		}
-	}
-}
+        $bk->cur_alias->insert();
+    }
+});
 
-?>
+dcCore::app()->addBehavior('importSingleV2', function ($line, $bk) {
+    if ($line->__name == 'alias') {
+        $found = false;
+        foreach ($bk->aliases as $v) {
+            if ($v['alias_url'] == $line->alias_url) {
+                $found = true;
+            }
+        }
+        if ($found) {
+            $bk->alias->deleteAlias($line->alias_url);
+        }
+        $bk->alias->createAlias($line->alias_url, $line->alias_destination, $line->alias_position);
+    }
+});
