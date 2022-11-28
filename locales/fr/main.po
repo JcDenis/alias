@@ -1,0 +1,54 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: alias 1.3\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2022-11-27T15:11:32+00:00\n"
+"Last-Translator: Jean-Crhistian Denis\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Aliases"
+msgstr "Alias"
+
+msgid "Invalid aliases definitions"
+msgstr "Définitions d'alias invalides"
+
+msgid "Alias URL is empty."
+msgstr "L'URL de l'alias est vide."
+
+msgid "Alias destination is empty."
+msgstr "La destination de l'alias est vide."
+
+msgid "Aliases list"
+msgstr "Liste des alias"
+
+msgid "No alias"
+msgstr "Aucun alias"
+
+msgid "Alias URL"
+msgstr "URL de l'alias"
+
+msgid "Alias destination"
+msgstr "Destination de l'alias"
+
+msgid "Alias position"
+msgstr "Position de l'alias"
+
+msgid "To remove an alias, empty its URL or destination."
+msgstr "Pour supprimer un alias, videz son URL ou sa destination."
+
+msgid "Update"
+msgstr "Mise à jour"
+
+msgid "New alias"
+msgstr "Nouvel alias"
+
+msgid "Alias URL:"
+msgstr "URL de l'alias :"
+
+msgid "Alias destination:"
+msgstr "Destination de l'alias :"
+
