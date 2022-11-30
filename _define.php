@@ -21,7 +21,9 @@ $this->registerModule(
     '1.3',
     [
         'requires'    => [['core', '2.24']],
-        'permissions' => dcAuth::PERMISSION_ADMIN,
+        'permissions' => dcCore::app()->auth->makePermissions([
+            dcAuth::PERMISSION_ADMIN,
+        ]),
         'type'        => 'plugin',
         'support'     => 'https://github.com/JcDenis/alias',
         'details'     => 'https://plugins.dotaddict.org/dc2/details/alias',

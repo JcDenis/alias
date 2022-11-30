@@ -19,7 +19,7 @@ dcCore::app()->menu[dcAdmin::MENU_PLUGINS]->addItem(
     dcCore::app()->adminurl->get('admin.plugin.alias'),
     dcPage::getPF('alias/icon.png'),
     preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.alias')) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
-    dcCore::app()->auth->check(dcAuth::PERMISSION_ADMIN, dcCore::app()->blog->id)
+    dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_ADMIN]), dcCore::app()->blog->id)
 );
 
 dcCore::app()->addBehavior('exportFullV2', function ($exp) {

@@ -14,7 +14,7 @@ if (!defined('DC_CONTEXT_ADMIN')) {
     return null;
 }
 
-dcPage::check(dcAuth::PERMISSION_ADMIN);
+dcPage::check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_ADMIN]));
 
 $o       = new dcAliases();
 $aliases = $o->getAliases();
