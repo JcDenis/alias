@@ -23,7 +23,7 @@ if (version_compare(dcCore::app()->getVersion('alias'), $version, '>=')) {
 try {
     $s = new dbStruct(dcCore::app()->con, dcCore::app()->prefix);
 
-    $s->alias
+    $s->{initAlias::ALIAS_TABLE_NAME}
         ->blog_id('varchar', 32, false)
         ->alias_url('varchar', 255, false)
         ->alias_destination('varchar', 255, false)

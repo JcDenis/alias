@@ -16,8 +16,6 @@ if (!defined('DC_RC_PATH')) {
 
 class dcAliases
 {
-    public const ALIAS_TABLE_NAME = 'alias';
-
     protected $aliases;
 
     public function __construct()
@@ -32,7 +30,7 @@ class dcAliases
 
         $this->aliases = [];
         $sql           = 'SELECT alias_url, alias_destination, alias_position ' .
-                'FROM ' . dcCore::app()->prefix . dcAliases::ALIAS_TABLE_NAME . ' ' .
+                'FROM ' . dcCore::app()->prefix . initAlias::ALIAS_TABLE_NAME . ' ' .
                 "WHERE blog_id = '" . dcCore::app()->con->escape(dcCore::app()->blog->id) . "' " .
                 'ORDER BY alias_position ASC ';
         $this->aliases = dcCore::app()->con->select($sql)->rows();
@@ -77,7 +75,7 @@ class dcAliases
             throw new Exception(__('Alias destination is empty.'));
         }
 
-        $cur                    = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcAliases::ALIAS_TABLE_NAME);
+        $cur                    = dcCore::app()->con->openCursor(dcCore::app()->prefix . initAlias::ALIAS_TABLE_NAME);
         $cur->blog_id           = (string) dcCore::app()->blog->id;
         $cur->alias_url         = (string) $url;
         $cur->alias_destination = (string) $destination;
@@ -88,7 +86,7 @@ class dcAliases
     public function deleteAlias($url)
     {
         dcCore::app()->con->execute(
-            'DELETE FROM ' . dcCore::app()->prefix . dcAliases::ALIAS_TABLE_NAME . ' ' .
+            'DELETE FROM ' . dcCore::app()->prefix . initAlias::ALIAS_TABLE_NAME . ' ' .
             "WHERE blog_id = '" . dcCore::app()->con->escape(dcCore::app()->blog->id) . "' " .
             "AND alias_url = '" . dcCore::app()->con->escape($url) . "' "
         );
@@ -97,7 +95,7 @@ class dcAliases
     public function deleteAliases()
     {
         dcCore::app()->con->execute(
-            'DELETE FROM ' . dcCore::app()->prefix . dcAliases::ALIAS_TABLE_NAME . ' ' .
+            'DELETE FROM ' . dcCore::app()->prefix . initAlias::ALIAS_TABLE_NAME . ' ' .
             "WHERE blog_id = '" . dcCore::app()->con->escape(dcCore::app()->blog->id) . "' "
         );
     }

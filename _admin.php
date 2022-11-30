@@ -30,13 +30,13 @@ dcCore::app()->addBehavior('exportSingleV2', function ($exp, $blog_id) {
     $exp->export(
         'alias',
         'SELECT alias_url, alias_destination, alias_position ' .
-        'FROM ' . dcCore::app()->prefix . 'alias A ' .
+        'FROM ' . dcCore::app()->prefix . initAlias::ALIAS_TABLE_NAME . ' A ' .
         "WHERE A.blog_id = '" . $blog_id . "'"
     );
 });
 
 dcCore::app()->addBehavior('importInitV2', function ($bk) {
-    $bk->cur_alias = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'alias');
+    $bk->cur_alias = dcCore::app()->con->openCursor(dcCore::app()->prefix . initAlias::ALIAS_TABLE_NAME);
     $bk->alias     = new dcAliases();
     $bk->aliases   = $bk->alias->getAliases();
 });
