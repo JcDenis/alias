@@ -23,7 +23,8 @@ $aliases = $o->getAliases();
 if (isset($_POST['a']) && is_array($_POST['a'])) {
     try {
         $o->updateAliases($_POST['a']);
-        http::redirect(dcCore::app()->admin->getPageURL() . '&up=1');
+        dcAdminNotices::addSuccessNotice(__('Aliases successfully updated.'));
+        dcCore::app()->adminurl->redirect('admin.plugin.alias');
     } catch (Exception $e) {
         dcCore::app()->error->add($e->getMessage());
     }
@@ -33,7 +34,8 @@ if (isset($_POST['a']) && is_array($_POST['a'])) {
 if (isset($_POST['alias_url'])) {
     try {
         $o->createAlias($_POST['alias_url'], $_POST['alias_destination'], count($aliases) + 1);
-        http::redirect(dcCore::app()->admin->getPageURL() . '&created=1');
+        dcAdminNotices::addSuccessNotice(__('Alias successfully created.'));
+        dcCore::app()->adminurl->redirect('admin.plugin.alias');
     } catch (Exception $e) {
         dcCore::app()->error->add($e->getMessage());
     }
@@ -46,8 +48,14 @@ if (isset($_POST['alias_url'])) {
 
 <body>
 <?php
+
 echo
-'<h2>' . html::escapeHTML(dcCore::app()->blog->name) . ' &rsaquo; ' . __('Aliases') . '</h2>' .
+dcPage::breadcrumb([
+    __('Plugins') => '',
+    __('Aliases') => '',
+]) .
+dcPage::notices() .
+
 '<h3>' . __('Aliases list') . '</h3>';
 
 if (empty($aliases)) {
