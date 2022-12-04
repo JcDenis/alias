@@ -18,7 +18,7 @@ dcPage::check(dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_ADMIN]));
 
 $o       = new dcAliases();
 $aliases = $o->getAliases();
-$part   = $_REQUEST['part'] ?? 'list';
+$part    = $_REQUEST['part'] ?? 'list';
 
 # Update aliases
 if (isset($_POST['a']) && is_array($_POST['a'])) {
@@ -53,8 +53,8 @@ if (isset($_POST['alias_url'])) {
 if ($part == 'new') {
     echo
     dcPage::breadcrumb([
-        __('Plugins') => '',
-        __('Aliases') => dcCore::app()->adminurl->get('admin.plugin.alias', ['part' => 'list']),
+        __('Plugins')   => '',
+        __('Aliases')   => dcCore::app()->adminurl->get('admin.plugin.alias', ['part' => 'list']),
         __('New alias') => '',
     ]) .
     dcPage::notices() .
@@ -63,8 +63,8 @@ if ($part == 'new') {
     '<p class="field"><label>' . __('Alias URL:') . ' ' . form::field('alias_url', 50, 255) . '</label></p>' .
     '<p class="field"><label>' . __('Alias destination:') . ' ' . form::field('alias_destination', 50, 255) . '</label></p>' .
     '<p class="form-note">' . sprintf(__('Do not put blog URL "%s" in fields.'), dcCore::app()->blog->url) . '</p>' .
-    '<p>' . 
-    dcCore::app()->formNonce() . 
+    '<p>' .
+    dcCore::app()->formNonce() .
     form::hidden('part', 'new') .
     '<input type="submit" value="' . __('Save') . '" /></p>' .
     '</form>';
@@ -72,7 +72,7 @@ if ($part == 'new') {
     echo
     dcPage::breadcrumb([
         __('Plugins') => '',
-        __('Aliases') => ''
+        __('Aliases') => '',
     ]) .
     dcPage::notices() .
     '<p class="top-add"><a class="button add" href="' .
@@ -98,11 +98,11 @@ if ($part == 'new') {
         foreach ($aliases as $k => $v) {
             echo
             '<tr class="line" id="l_' . $k . '">' .
-            '<td>' . 
+            '<td>' .
             form::field(['a[' . $k . '][alias_url]'], 50, 255, html::escapeHTML($v['alias_url'])) . '</td>' .
-            '<td class="maximal">' . 
+            '<td class="maximal">' .
             form::field(['a[' . $k . '][alias_destination]'], 50, 255, html::escapeHTML($v['alias_destination'])) . '</td>' .
-            '<td class="minimal">' . 
+            '<td class="minimal">' .
             form::number(['a[' . $k . '][alias_position]'], [
                 'min'        => 1,
                 'max'        => count($aliases),
@@ -113,10 +113,10 @@ if ($part == 'new') {
             '</tr>';
         }
 
-        echo 
+        echo
         '</tbody></table></div>' .
         '<p class="form-note">' . __('To remove an alias, empty its URL or destination.') . '</p>' .
-        '<p>' . 
+        '<p>' .
         dcCore::app()->formNonce() .
         form::hidden('part', 'list') .
         '<input type="submit" value="' . __('Update') . '" /></p>' .
