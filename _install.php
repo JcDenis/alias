@@ -14,15 +14,15 @@ if (!defined('DC_CONTEXT_ADMIN')) {
     return null;
 }
 
-$version = dcCore::app()->plugins->moduleInfo('alias', 'version');
-
-if (version_compare(dcCore::app()->getVersion('alias'), $version, '>=')) {
-    return null;
-}
-
 try {
-    $s = new dbStruct(dcCore::app()->con, dcCore::app()->prefix);
+    $mod_id = basename(__DIR__);
 
+    $version = dcCore::app()->plugins->moduleInfo($mod_id, 'version');
+    if (version_compare(dcCore::app()->getVersion($mod_id), $version, '>=')) {
+        return null;
+    }
+
+    $s = new dbStruct(dcCore::app()->con, dcCore::app()->prefix);
     $s->{initAlias::ALIAS_TABLE_NAME}
         ->blog_id('varchar', 32, false)
         ->alias_url('varchar', 255, false)
@@ -37,11 +37,10 @@ try {
         ->reference('fk_alias_blog', 'blog_id', 'blog', 'blog_id', 'cascade', 'cascade')
     ;
 
-    # Schema installation
     $si      = new dbStruct(dcCore::app()->con, dcCore::app()->prefix);
     $changes = $si->synchronize($s);
 
-    dcCore::app()->setVersion('alias', $version);
+    dcCore::app()->setVersion($mod_id, $version);
 
     return true;
 } catch (Exception $e) {
