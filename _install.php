@@ -15,12 +15,9 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 }
 
 try {
-    $mod_id = basename(__DIR__);
-
-    if (version_compare(
-        dcCore::app()->getVersion($mod_id), 
-        dcCore::app()->plugins->moduleInfo($mod_id, 'version'), 
-        '>='
+    if (!dcCore::app()->newVersion(
+        basename(__DIR__), 
+        dcCore::app()->plugins->moduleInfo(basename(__DIR__), 'version')
     )) {
         return null;
     }
