@@ -84,6 +84,7 @@ if ($part == 'new') {
     } else {
         echo
         '<form action="' . dcCore::app()->admin->getPageURL() . '" method="post">' .
+        '<p>' . sprintf(__('There is %s alias.', 'There are %s aliases.', count($aliases)), count($aliases)) . '</p>' .
         '<div class="table-outer">' .
         '<table>' .
         '<caption>' . __('Aliases list') . '</caption>' .
