@@ -1,3 +1,7 @@
+1.4.1 - 2022.12.20
+- add number of aliases on list page
+- fix install
+
 1.4 - 2022.12.04
 - use dotclear breadcrumb, notice, redirection
 - use constant for table name
