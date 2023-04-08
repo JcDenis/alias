@@ -10,27 +10,30 @@
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-if (!defined('DC_RC_PATH')) {
-    return null;
-}
+declare(strict_types=1);
 
-class dcAliases
+namespace Dotclear\Plugin\alias;
+
+use dcCore;
+use Exception;
+
+class Alias
 {
-    protected $aliases;
+    protected array $aliases;
 
     public function __construct()
     {
     }
 
-    public function getAliases()
+    public function getAliases(): array
     {
-        if (is_array($this->aliases)) {
+        if (!empty($this->aliases)) {
             return $this->aliases;
         }
 
         $this->aliases = [];
         $sql           = 'SELECT alias_url, alias_destination, alias_position ' .
-                'FROM ' . dcCore::app()->prefix . initAlias::ALIAS_TABLE_NAME . ' ' .
+                'FROM ' . dcCore::app()->prefix . My::ALIAS_TABLE_NAME . ' ' .
                 "WHERE blog_id = '" . dcCore::app()->con->escapeStr((string) dcCore::app()->blog->id) . "' " .
                 'ORDER BY alias_position ASC ';
         $this->aliases = dcCore::app()->con->select($sql)->rows();
@@ -38,9 +41,9 @@ class dcAliases
         return $this->aliases;
     }
 
-    public function updateAliases($aliases)
+    public function updateAliases(array $aliases): void
     {
-        usort($aliases, [$this,'sortCallback']);
+        usort($aliases, fn ($a, $b) => (int) $a['alias_position'] <=> (int) $b['alias_position']);
         foreach ($aliases as $v) {
             if (!isset($v['alias_url']) || !isset($v['alias_destination'])) {
                 throw new Exception(__('Invalid aliases definitions'));
@@ -65,7 +68,7 @@ class dcAliases
         }
     }
 
-    public function createAlias($url, $destination, $position)
+    public function createAlias(string $url, string $destination, int $position): void
     {
         if (!$url) {
             throw new Exception(__('Alias URL is empty.'));
@@ -75,37 +78,28 @@ class dcAliases
             throw new Exception(__('Alias destination is empty.'));
         }
 
-        $cur                    = dcCore::app()->con->openCursor(dcCore::app()->prefix . initAlias::ALIAS_TABLE_NAME);
-        $cur->blog_id           = (string) dcCore::app()->blog->id;
-        $cur->alias_url         = (string) $url;
-        $cur->alias_destination = (string) $destination;
-        $cur->alias_position    = abs((int) $position);
+        $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . My::ALIAS_TABLE_NAME);
+        $cur->setField('blog_id', (string) dcCore::app()->blog->id);
+        $cur->setField('alias_url', (string) $url);
+        $cur->setField('alias_destination', (string) $destination);
+        $cur->setField('alias_position', abs((int) $position));
         $cur->insert();
     }
 
-    public function deleteAlias($url)
+    public function deleteAlias(string $url): void
     {
         dcCore::app()->con->execute(
-            'DELETE FROM ' . dcCore::app()->prefix . initAlias::ALIAS_TABLE_NAME . ' ' .
+            'DELETE FROM ' . dcCore::app()->prefix . My::ALIAS_TABLE_NAME . ' ' .
             "WHERE blog_id = '" . dcCore::app()->con->escapeStr((string) dcCore::app()->blog->id) . "' " .
             "AND alias_url = '" . dcCore::app()->con->escapeStr((string) $url) . "' "
         );
     }
 
-    public function deleteAliases()
+    public function deleteAliases(): void
     {
         dcCore::app()->con->execute(
-            'DELETE FROM ' . dcCore::app()->prefix . initAlias::ALIAS_TABLE_NAME . ' ' .
+            'DELETE FROM ' . dcCore::app()->prefix . My::ALIAS_TABLE_NAME . ' ' .
             "WHERE blog_id = '" . dcCore::app()->con->escapeStr((string) dcCore::app()->blog->id) . "' "
         );
-    }
-
-    protected function sortCallback($a, $b)
-    {
-        if ($a['alias_position'] == $b['alias_position']) {
-            return 0;
-        }
-
-        return $a['alias_position'] < $b['alias_position'] ? -1 : 1;
     }
 }

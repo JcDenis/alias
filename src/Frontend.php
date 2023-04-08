@@ -10,33 +10,53 @@
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-if (!defined('DC_RC_PATH')) {
-    return null;
-}
+declare(strict_types=1);
 
-dcCore::app()->url->register('alias', '', '^(.*)$', function ($args) {
-    $o       = new dcAliases();
-    $aliases = $o->getAliases();
-    $part    = $args;
+namespace Dotclear\Plugin\alias;
 
-    foreach ($aliases as $v) {
-        if (@preg_match('#^/.*/$#', $v['alias_url']) && @preg_match($v['alias_url'], $args)) {
-            $part = preg_replace($v['alias_url'], $v['alias_destination'], $args);
+use dcCore;
+use dcNsProcess;
 
-            break;
-        } elseif ($v['alias_url'] == $args) {
-            $part = $v['alias_destination'];
+class Frontend extends dcNsProcess
+{
+    public static function init(): bool
+    {
+        static::$init = defined('DC_RC_PATH');
 
-            break;
+        return static::$init;
+    }
+
+    public static function process(): bool
+    {
+        if (!static::$init) {
+            return false;
         }
-    }
 
-    dcCore::app()->url->unregister('alias');
-    dcCore::app()->url->getArgs($part, $type, $args);
+        dcCore::app()->url->register('alias', '', '^(.*)$', function (string $args): void {
+            $part = $args;
 
-    if (!$type) {
-        dcCore::app()->url->callDefaultHandler($args);
-    } else {
-        dcCore::app()->url->callHandler($type, $args);
+            foreach ((new Alias())->getAliases() as $v) {
+                if (@preg_match('#^/.*/$#', $v['alias_url']) && @preg_match($v['alias_url'], $args)) {
+                    $part = preg_replace($v['alias_url'], $v['alias_destination'], $args);
+
+                    break;
+                } elseif ($v['alias_url'] == $args) {
+                    $part = $v['alias_destination'];
+
+                    break;
+                }
+            }
+
+            dcCore::app()->url->unregister('alias');
+            dcCore::app()->url->getArgs($part, $type, $args);
+
+            if (!$type) {
+                dcCore::app()->url->callDefaultHandler($args);
+            } else {
+                dcCore::app()->url->callHandler($type, $args);
+            }
+        });
+
+        return true;
     }
-});
+}

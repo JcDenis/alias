@@ -10,39 +10,53 @@
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-if (!defined('DC_CONTEXT_ADMIN')) {
-    return null;
-}
+declare(strict_types=1);
 
-try {
-    if (!dcCore::app()->newVersion(
-        basename(__DIR__),
-        dcCore::app()->plugins->moduleInfo(basename(__DIR__), 'version')
-    )) {
-        return null;
+namespace Dotclear\Plugin\alias;
+
+use dbStruct;
+use dcCore;
+use dcNsProcess;
+use Exception;
+
+class Install extends dcNsProcess
+{
+    public static function init(): bool
+    {
+        static::$init = defined('DC_CONTEXT_ADMIN') && dcCore::app()->newVersion(My::id(), dcCore::app()->plugins->moduleInfo(My::id(), 'version'));
+
+        return static::$init;
     }
 
-    $s = new dbStruct(dcCore::app()->con, dcCore::app()->prefix);
-    $s->{initAlias::ALIAS_TABLE_NAME}
-        ->blog_id('varchar', 32, false)
-        ->alias_url('varchar', 255, false)
-        ->alias_destination('varchar', 255, false)
-        ->alias_position('smallint', 0, false, 1)
+    public static function process(): bool
+    {
+        if (!static::$init) {
+            return false;
+        }
 
-        ->primary('pk_alias', 'blog_id', 'alias_url')
+        try {
+            $s = new dbStruct(dcCore::app()->con, dcCore::app()->prefix);
+            $s->{My::ALIAS_TABLE_NAME}
+                ->blog_id('varchar', 32, false)
+                ->alias_url('varchar', 255, false)
+                ->alias_destination('varchar', 255, false)
+                ->alias_position('smallint', 0, false, 1)
 
-        ->index('idx_alias_blog_id', 'btree', 'blog_id')
-        ->index('idx_alias_blog_id_alias_position', 'btree', 'blog_id', 'alias_position')
+                ->primary('pk_alias', 'blog_id', 'alias_url')
 
-        ->reference('fk_alias_blog', 'blog_id', 'blog', 'blog_id', 'cascade', 'cascade')
-    ;
+                ->index('idx_alias_blog_id', 'btree', 'blog_id')
+                ->index('idx_alias_blog_id_alias_position', 'btree', 'blog_id', 'alias_position')
 
-    $si      = new dbStruct(dcCore::app()->con, dcCore::app()->prefix);
-    $changes = $si->synchronize($s);
+                ->reference('fk_alias_blog', 'blog_id', 'blog', 'blog_id', 'cascade', 'cascade')
+            ;
 
-    return true;
-} catch (Exception $e) {
-    dcCore::app()->error->add($e->getMessage());
+            (new dbStruct(dcCore::app()->con, dcCore::app()->prefix))->synchronize($s);
+
+            return true;
+        } catch (Exception $e) {
+            dcCore::app()->error->add($e->getMessage());
+
+            return false;
+        }
+    }
 }
-
-return false;
