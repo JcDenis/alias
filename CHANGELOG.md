@@ -1,3 +1,7 @@
+1.5 - 2023.04.08
+- require dotclear 2.26
+- use namespace
+
 1.4.1 - 2022.12.20
 - add number of aliases on list page
 - fix install

@@ -18,15 +18,15 @@ $this->registerModule(
     'alias',
     "Create aliases of your blog's URLs",
     'Olivier Meunier and contributors',
-    '1.4.1',
+    '1.5',
     [
-        'requires'    => [['core', '2.24']],
+        'requires'    => [['core', '2.26']],
         'permissions' => dcCore::app()->auth->makePermissions([
-            dcAuth::PERMISSION_ADMIN,
+            dcCore::app()->auth::PERMISSION_ADMIN,
         ]),
-        'type'        => 'plugin',
-        'support'     => 'https://github.com/JcDenis/alias',
-        'details'     => 'https://plugins.dotaddict.org/dc2/details/alias',
-        'repository'  => 'https://raw.githubusercontent.com/JcDenis/alias/master/dcstore.xml',
+        'type'       => 'plugin',
+        'support'    => 'https://github.com/JcDenis/alias',
+        'details'    => 'https://plugins.dotaddict.org/dc2/details/alias',
+        'repository' => 'https://raw.githubusercontent.com/JcDenis/alias/master/dcstore.xml',
     ]
 );
