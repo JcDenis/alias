@@ -112,14 +112,14 @@ class Manage extends dcNsProcess
                 (new Text('h3', __('New alias'))),
                 (new Form(My::id() . '_form'))->method('post')->action(dcCore::app()->admin->getPageURL())->fields([
                     (new Para())->class('field')->items([
-                        (new Label(__('Alias URL:')))->for('alias_url'),
+                        (new Label(__('Alias URL:'), Label::OUTSIDE_LABEL_BEFORE))->for('alias_url'),
                         (new Input('alias_url'))->size(50)->maxlenght(255),
                     ]),
                     (new Para())->class('field')->items([
-                        (new Label(__('Alias destination:')))->for('alias_destination'),
+                        (new Label(__('Alias destination:'), Label::OUTSIDE_LABEL_BEFORE))->for('alias_destination'),
                         (new Input('alias_destination'))->size(50)->maxlenght(255),
                     ]),
-                    (new Note())->text(sprintf(__('Do not put blog URL "%s" in fields.'), dcCore::app()->blog->url)),
+                    (new Note())->class('form-note')->text(sprintf(__('Do not put blog URL "%s" in fields.'), dcCore::app()->blog->url)),
                     (new Para())->items([
                         dcCore::app()->formNonce(false),
                         (new Hidden('part', 'new')),
