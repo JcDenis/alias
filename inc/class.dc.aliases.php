@@ -31,7 +31,7 @@ class dcAliases
         $this->aliases = [];
         $sql           = 'SELECT alias_url, alias_destination, alias_position ' .
                 'FROM ' . dcCore::app()->prefix . initAlias::ALIAS_TABLE_NAME . ' ' .
-                "WHERE blog_id = '" . dcCore::app()->con->escape(dcCore::app()->blog->id) . "' " .
+                "WHERE blog_id = '" . dcCore::app()->con->escapeStr((string) dcCore::app()->blog->id) . "' " .
                 'ORDER BY alias_position ASC ';
         $this->aliases = dcCore::app()->con->select($sql)->rows();
 
@@ -87,8 +87,8 @@ class dcAliases
     {
         dcCore::app()->con->execute(
             'DELETE FROM ' . dcCore::app()->prefix . initAlias::ALIAS_TABLE_NAME . ' ' .
-            "WHERE blog_id = '" . dcCore::app()->con->escape(dcCore::app()->blog->id) . "' " .
-            "AND alias_url = '" . dcCore::app()->con->escape($url) . "' "
+            "WHERE blog_id = '" . dcCore::app()->con->escapeStr((string) dcCore::app()->blog->id) . "' " .
+            "AND alias_url = '" . dcCore::app()->con->escapeStr((string) $url) . "' "
         );
     }
 
@@ -96,7 +96,7 @@ class dcAliases
     {
         dcCore::app()->con->execute(
             'DELETE FROM ' . dcCore::app()->prefix . initAlias::ALIAS_TABLE_NAME . ' ' .
-            "WHERE blog_id = '" . dcCore::app()->con->escape(dcCore::app()->blog->id) . "' "
+            "WHERE blog_id = '" . dcCore::app()->con->escapeStr((string) dcCore::app()->blog->id) . "' "
         );
     }
 
