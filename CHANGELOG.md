@@ -1,3 +1,7 @@
+1.5.1 - 2023.04.09
+- require dotclear 2.26
+- use sql statement
+
 1.5 - 2023.04.08
 - require dotclear 2.26
 - use namespace
