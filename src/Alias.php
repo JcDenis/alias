@@ -15,32 +15,52 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\alias;
 
 use dcCore;
+use Dotclear\Database\Statement\{
+    DeleteStatement,
+    SelectStatement
+};
 use Exception;
 
+/**
+ * plugin Alias main class
+ */
 class Alias
 {
-    protected array $aliases;
+    /** @var    array   $aliases    Stak of aliases */
+    protected array $aliases = [];
 
-    public function __construct()
-    {
-    }
-
+    /**
+     * Get aliases.
+     *
+     * @return  array   Stack of aliases
+     */
     public function getAliases(): array
     {
         if (!empty($this->aliases)) {
             return $this->aliases;
         }
 
-        $this->aliases = [];
-        $sql           = 'SELECT alias_url, alias_destination, alias_position ' .
-                'FROM ' . dcCore::app()->prefix . My::ALIAS_TABLE_NAME . ' ' .
-                "WHERE blog_id = '" . dcCore::app()->con->escapeStr((string) dcCore::app()->blog->id) . "' " .
-                'ORDER BY alias_position ASC ';
-        $this->aliases = dcCore::app()->con->select($sql)->rows();
+        $sql = new SelectStatement();
+        $rs  = $sql->from(dcCore::app()->prefix . My::ALIAS_TABLE_NAME)
+            ->columns([
+                'alias_url',
+                'alias_destination',
+                'alias_position',
+            ])
+            ->where('blog_id = ' . $sql->quote((string) dcCore::app()->blog->id))
+            ->order('alias_position ASC')
+            ->select();
+
+        $this->aliases = is_null($rs) ? [] : $rs->rows();
 
         return $this->aliases;
     }
 
+    /**
+     * Update aliases stack.
+     *
+     * @param   array   $aliases    The alias stack
+     */
     public function updateAliases(array $aliases): void
     {
         usort($aliases, fn ($a, $b) => (int) $a['alias_position'] <=> (int) $b['alias_position']);
@@ -68,13 +88,22 @@ class Alias
         }
     }
 
+    /**
+     * Create an alias.
+     *
+     * @param   string  $url            The URL
+     * @param   string  $destination    The destination
+     * @param   int     $position       The position
+     */
     public function createAlias(string $url, string $destination, int $position): void
     {
-        if (!$url) {
+        $url         = trim($url);
+        $destination = trim($destination);
+
+        if (empty($url)) {
             throw new Exception(__('Alias URL is empty.'));
         }
-
-        if (!$destination) {
+        if (empty($destination)) {
             throw new Exception(__('Alias destination is empty.'));
         }
 
@@ -86,20 +115,28 @@ class Alias
         $cur->insert();
     }
 
+    /**
+     * Delete an alias according to its URL.
+     *
+     * @param   string  $url    The alias URL
+     */
     public function deleteAlias(string $url): void
     {
-        dcCore::app()->con->execute(
-            'DELETE FROM ' . dcCore::app()->prefix . My::ALIAS_TABLE_NAME . ' ' .
-            "WHERE blog_id = '" . dcCore::app()->con->escapeStr((string) dcCore::app()->blog->id) . "' " .
-            "AND alias_url = '" . dcCore::app()->con->escapeStr((string) $url) . "' "
-        );
+        $sql = new DeleteStatement();
+        $sql->from(dcCore::app()->prefix . My::ALIAS_TABLE_NAME)
+            ->where('blog_id = ' . $sql->quote((string) dcCore::app()->blog->id))
+            ->and('alias_url = ' . $sql->quote($url))
+            ->delete();
     }
 
+    /**
+     * Delete all aliases.
+     */
     public function deleteAliases(): void
     {
-        dcCore::app()->con->execute(
-            'DELETE FROM ' . dcCore::app()->prefix . My::ALIAS_TABLE_NAME . ' ' .
-            "WHERE blog_id = '" . dcCore::app()->con->escapeStr((string) dcCore::app()->blog->id) . "' "
-        );
+        $sql = new DeleteStatement();
+        $sql->from(dcCore::app()->prefix . My::ALIAS_TABLE_NAME)
+            ->where('blog_id = ' . $sql->quote((string) dcCore::app()->blog->id))
+            ->delete();
     }
 }
