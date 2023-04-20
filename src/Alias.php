@@ -40,6 +40,11 @@ class Alias
             return $this->aliases;
         }
 
+        // nullsafe PHP < 8.0
+        if (is_null(dcCore::app()->blog)) {
+            return [];
+        }
+
         $sql = new SelectStatement();
         $rs  = $sql->from(dcCore::app()->prefix . My::ALIAS_TABLE_NAME)
             ->columns([
@@ -97,6 +102,11 @@ class Alias
      */
     public function createAlias(string $url, string $destination, int $position): void
     {
+        // nullsafe PHP < 8.0
+        if (is_null(dcCore::app()->blog)) {
+            return;
+        }
+
         $url         = trim($url);
         $destination = trim($destination);
 
@@ -122,6 +132,11 @@ class Alias
      */
     public function deleteAlias(string $url): void
     {
+        // nullsafe PHP < 8.0
+        if (is_null(dcCore::app()->blog)) {
+            return;
+        }
+
         $sql = new DeleteStatement();
         $sql->from(dcCore::app()->prefix . My::ALIAS_TABLE_NAME)
             ->where('blog_id = ' . $sql->quote((string) dcCore::app()->blog->id))
@@ -134,6 +149,11 @@ class Alias
      */
     public function deleteAliases(): void
     {
+        // nullsafe PHP < 8.0
+        if (is_null(dcCore::app()->blog)) {
+            return;
+        }
+
         $sql = new DeleteStatement();
         $sql->from(dcCore::app()->prefix . My::ALIAS_TABLE_NAME)
             ->where('blog_id = ' . $sql->quote((string) dcCore::app()->blog->id))
