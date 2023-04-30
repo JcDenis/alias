@@ -1,3 +1,11 @@
+1.6 - 2023.05.01
+- require dotclear 2.26
+- use behavior intead of urlHandler (see README)
+- fix URL before saving (without blog URL)
+- add option for visible redirection
+- add plugin Uninstaller features
+- change table structure (for redirect option)
+
 1.5.1 - 2023.04.09
 - require dotclear 2.26
 - use sql statement

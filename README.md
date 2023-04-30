@@ -28,6 +28,19 @@ Dotaddict repository. (See Dotclear's documentation to know how do this)
 
 You can manage your aliases from menu ''Alias'' on admin dashboard sidebar.
 
+## RULES
+
+Only blog URLs can be redirected.
+It can redirect a specific URL "plop" to another one "post/2023/04/24/my-post".
+It can redirect all URLs that content "plop" using alias "/plop/" 
+by replacing it by destination "post" into requesting URL.
+It can not redirect an alias to another alias. (Even if it's not at the begining of the URL!)
+It has priority on all ohters URLs handlers, so if you create an alias of an existing page,
+the destination from plugin _alias_ will be used.
+
+Keep in mind, plugin _alias_ loads all registered aliases to test them on each page load, 
+so more there are aliases, more page load is slow.
+
 ## LINKS
 
  * License : [GNU GPL v2](https://www.gnu.org/licenses/old-licenses/lgpl-2.0.html)
