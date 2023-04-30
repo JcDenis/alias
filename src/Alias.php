@@ -107,8 +107,8 @@ class Alias
             return;
         }
 
-        $url         = trim($url);
-        $destination = trim($destination);
+        $url         = self::removeBlogUrl($url);
+        $destination = self::removeBlogUrl($destination);
 
         if (empty($url)) {
             throw new Exception(__('Alias URL is empty.'));
@@ -158,5 +158,17 @@ class Alias
         $sql->from(dcCore::app()->prefix . My::ALIAS_TABLE_NAME)
             ->where('blog_id = ' . $sql->quote((string) dcCore::app()->blog->id))
             ->delete();
+    }
+
+    /**
+     * Remove blog URL from alias URLs.
+     *
+     * @param   string  $url    The URL to clean
+     *
+     * @return  string The cleaned URL
+     */
+    public static function removeBlogUrl(string $url): string
+    {
+        return str_replace(dcCore::app()->blog->url, '', trim($url));
     }
 }
