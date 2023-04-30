@@ -14,9 +14,9 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\alias;
 
-use dbStruct;
 use dcCore;
 use dcNsProcess;
+use Dotclear\Database\Structure;
 use Exception;
 
 class Install extends dcNsProcess
@@ -35,13 +35,13 @@ class Install extends dcNsProcess
         }
 
         try {
-            $s = new dbStruct(dcCore::app()->con, dcCore::app()->prefix);
-            $s->{My::ALIAS_TABLE_NAME}
-                ->blog_id('varchar', 32, false)
-                ->alias_url('varchar', 255, false)
-                ->alias_destination('varchar', 255, false)
-                ->alias_position('smallint', 0, false, 1)
-                ->alias_redirect('smallint', 0, false, 0)
+            $s = new Structure(dcCore::app()->con, dcCore::app()->prefix);
+            $s->__get(My::ALIAS_TABLE_NAME)
+                ->field('blog_id', 'varchar', 32, false)
+                ->field('alias_url', 'varchar', 255, false)
+                ->field('alias_destination', 'varchar', 255, false)
+                ->field('alias_position', 'smallint', 0, false, 1)
+                ->field('alias_redirect', 'smallint', 0, false, 0)
 
                 ->primary('pk_alias', 'blog_id', 'alias_url')
 
@@ -51,7 +51,7 @@ class Install extends dcNsProcess
                 ->reference('fk_alias_blog', 'blog_id', 'blog', 'blog_id', 'cascade', 'cascade')
             ;
 
-            (new dbStruct(dcCore::app()->con, dcCore::app()->prefix))->synchronize($s);
+            (new Structure(dcCore::app()->con, dcCore::app()->prefix))->synchronize($s);
 
             return true;
         } catch (Exception $e) {
