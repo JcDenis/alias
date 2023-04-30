@@ -1,65 +1,99 @@
+# Language: Français
+# Module: alias - 1.6
+# Date: 2023-04-30 22:52:13
+# Author: Jean-Christian Denis
+# Translated with translater 2023.04.23
+
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: alias 1.4\n"
+"Project-Id-Version: alias 1.6\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-12-20T20:03:59+00:00\n"
+"PO-Revision-Date: 2023-04-30T22:52:13+00:00\n"
 "Last-Translator: Jean-Christian Denis\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "Aliases"
-msgstr "Alias"
-
+#: src/Alias.php:75
 msgid "Invalid aliases definitions"
 msgstr "Définitions d'alias invalides"
 
+#: src/Alias.php:116
 msgid "Alias URL is empty."
 msgstr "L'URL de l'alias est vide."
 
+#: src/Alias.php:119
 msgid "Alias destination is empty."
 msgstr "La destination de l'alias est vide."
 
+#: src/Manage.php:74
 msgid "Aliases successfully updated."
 msgstr "Alias mis à jour avec succès."
 
+#: src/Manage.php:85
 msgid "Alias successfully created."
 msgstr "Alias créer avec succès."
 
+#: src/Manage.php:116
 msgid "New alias"
 msgstr "Nouvel alias"
 
+#: src/Manage.php:124
 msgid "Alias URL:"
 msgstr "URL de l'alias :"
 
+#: src/Manage.php:128
 msgid "Alias destination:"
 msgstr "Destination de l'alias :"
 
+#: src/Manage.php:131
 msgid "Do not put blog URL \"%s\" in fields."
 msgstr "Ne pas mettre l'URL du blog \"%s\" dans les champs."
 
+#: src/Manage.php:134
+msgid "Do visible redirection to destination"
+msgstr "Faire une redirection visible vers la destination"
+
+#: src/Manage.php:155
 msgid "No alias"
 msgstr "Aucun alias"
 
+#: src/Manage.php:159
 msgid "There is %s alias."
 msgid_plural "There are %s aliases."
 msgstr[0] "Il y a %s alias."
 msgstr[1] "Il y a %s alias."
 
+#: src/Manage.php:162
 msgid "Aliases list"
 msgstr "Liste des alias"
 
+#: src/Manage.php:165
 msgid "Alias URL"
 msgstr "URL de l'alias"
 
+#: src/Manage.php:166
 msgid "Alias destination"
 msgstr "Destination de l'alias"
 
+#: src/Manage.php:167
 msgid "Alias position"
 msgstr "Position de l'alias"
 
+#: src/Manage.php:168
+msgid "Redrection"
+msgstr "Redirection"
+
+#: src/Manage.php:182
+msgid "visible redirection to %s"
+msgstr "Redirection visible vers %s"
+
+#: src/Manage.php:188
 msgid "To remove an alias, empty its URL or destination."
 msgstr "Pour supprimer un alias, videz son URL ou sa destination."
+
+msgid "Aliases"
+msgstr "Alias"
 
