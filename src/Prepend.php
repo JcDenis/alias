@@ -36,16 +36,19 @@ class Prepend extends dcNsProcess
 
         dcCore::app()->addBehavior('urlHandlerGetArgsDocument', function (dcUrlHandlers $handler): void {
             $found = $redir = false;
-            $type  = 'alias';
+            $type  = '';
             $part  = $args = $_SERVER['URL_REQUEST_PART'];
 
+            // load all Aliases
             foreach ((new Alias())->getAliases() as $v) {
+                // multi alias using "/url/" to "destination"
                 if (@preg_match('#^/.*/$#', $v['alias_url']) && @preg_match($v['alias_url'], $args)) {
                     $part  = preg_replace($v['alias_url'], $v['alias_destination'], $args);
                     $found = true;
                     $redir = !empty($v['alias_redirect']);
 
                     break;
+                // single alias using "url" to "destination"
                 } elseif ($v['alias_url'] == $args) {
                     $part  = $v['alias_destination'];
                     $found = true;
@@ -55,17 +58,21 @@ class Prepend extends dcNsProcess
                 }
             }
 
+            // no URLs found
             if (!$found) {
                 return;
             }
 
+            // Use visible redirection
             if ($redir) {
                 Http::redirect(dcCore::app()->blog->url . $part);
             }
 
+            // regain URL type
             $_SERVER['URL_REQUEST_PART'] = $part;
             dcCore::app()->url->getArgs($part, $type, $args);
 
+            // call real handler
             if (!$type) {
                 dcCore::app()->url->callDefaultHandler($args);
             } else {

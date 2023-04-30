@@ -40,7 +40,7 @@ class Alias
             return $this->aliases;
         }
 
-        // nullsafe PHP < 8.0
+        // nullsafe
         if (is_null(dcCore::app()->blog)) {
             return [];
         }
@@ -51,7 +51,7 @@ class Alias
                 'alias_url',
                 'alias_destination',
                 'alias_position',
-                'alias_redirect'
+                'alias_redirect',
             ])
             ->where('blog_id = ' . $sql->quote((string) dcCore::app()->blog->id))
             ->order('alias_position ASC')
@@ -100,11 +100,11 @@ class Alias
      * @param   string  $url            The URL
      * @param   string  $destination    The destination
      * @param   int     $position       The position
-     * @param   bool    $position       Do redirection
+     * @param   bool    $redirect       Do redirection
      */
     public function createAlias(string $url, string $destination, int $position, bool $redirect): void
     {
-        // nullsafe PHP < 8.0
+        // nullsafe
         if (is_null(dcCore::app()->blog)) {
             return;
         }
@@ -135,7 +135,7 @@ class Alias
      */
     public function deleteAlias(string $url): void
     {
-        // nullsafe PHP < 8.0
+        // nullsafe
         if (is_null(dcCore::app()->blog)) {
             return;
         }
@@ -152,7 +152,7 @@ class Alias
      */
     public function deleteAliases(): void
     {
-        // nullsafe PHP < 8.0
+        // nullsafe
         if (is_null(dcCore::app()->blog)) {
             return;
         }
@@ -172,6 +172,6 @@ class Alias
      */
     public static function removeBlogUrl(string $url): string
     {
-        return str_replace(dcCore::app()->blog->url, '', trim($url));
+        return is_null(dcCore::app()->blog) ? trim($url) : str_replace(dcCore::app()->blog->url, '', trim($url));
     }
 }
