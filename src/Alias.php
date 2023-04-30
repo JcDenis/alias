@@ -51,6 +51,7 @@ class Alias
                 'alias_url',
                 'alias_destination',
                 'alias_position',
+                'alias_redirect'
             ])
             ->where('blog_id = ' . $sql->quote((string) dcCore::app()->blog->id))
             ->order('alias_position ASC')
@@ -81,7 +82,7 @@ class Alias
             $this->deleteAliases();
             foreach ($aliases as $k => $v) {
                 if (!empty($v['alias_url']) && !empty($v['alias_destination'])) {
-                    $this->createAlias($v['alias_url'], $v['alias_destination'], $k + 1);
+                    $this->createAlias($v['alias_url'], $v['alias_destination'], $k + 1, !empty($v['alias_redirect']));
                 }
             }
 
@@ -99,8 +100,9 @@ class Alias
      * @param   string  $url            The URL
      * @param   string  $destination    The destination
      * @param   int     $position       The position
+     * @param   bool    $position       Do redirection
      */
-    public function createAlias(string $url, string $destination, int $position): void
+    public function createAlias(string $url, string $destination, int $position, bool $redirect): void
     {
         // nullsafe PHP < 8.0
         if (is_null(dcCore::app()->blog)) {
@@ -122,6 +124,7 @@ class Alias
         $cur->setField('alias_url', (string) $url);
         $cur->setField('alias_destination', (string) $destination);
         $cur->setField('alias_position', abs((int) $position));
+        $cur->setField('alias_redirect', (int) $redirect);
         $cur->insert();
     }
 

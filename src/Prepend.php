@@ -17,6 +17,7 @@ namespace Dotclear\Plugin\alias;
 use dcCore;
 use dcNsProcess;
 use dcUrlHandlers;
+use Dotclear\Helper\Network\Http;
 
 class Prepend extends dcNsProcess
 {
@@ -34,18 +35,21 @@ class Prepend extends dcNsProcess
         }
 
         dcCore::app()->addBehavior('urlHandlerGetArgsDocument', function (dcUrlHandlers $handler): void {
-            $found = false;
+            $found = $redir = false;
             $type  = 'alias';
             $part  = $args = $_SERVER['URL_REQUEST_PART'];
+
             foreach ((new Alias())->getAliases() as $v) {
                 if (@preg_match('#^/.*/$#', $v['alias_url']) && @preg_match($v['alias_url'], $args)) {
                     $part  = preg_replace($v['alias_url'], $v['alias_destination'], $args);
                     $found = true;
+                    $redir = !empty($v['alias_redirect']);
 
                     break;
                 } elseif ($v['alias_url'] == $args) {
                     $part  = $v['alias_destination'];
                     $found = true;
+                    $redir = !empty($v['alias_redirect']);
 
                     break;
                 }
@@ -55,7 +59,11 @@ class Prepend extends dcNsProcess
                 return;
             }
 
-            dcCore::app()->url->unregister('alias');
+            if ($redir) {
+                Http::redirect(dcCore::app()->blog->url . $part);
+            }
+
+            $_SERVER['URL_REQUEST_PART'] = $part;
             dcCore::app()->url->getArgs($part, $type, $args);
 
             if (!$type) {

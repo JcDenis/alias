@@ -18,6 +18,7 @@ use dcCore;
 use dcNsProcess;
 use dcPage;
 use Dotclear\Helper\Html\Form\{
+    Checkbox,
     Div,
     Form,
     Hidden,
@@ -80,7 +81,7 @@ class Manage extends dcNsProcess
         # New alias
         if (isset($_POST['alias_url'])) {
             try {
-                $alias->createAlias($_POST['alias_url'], $_POST['alias_destination'], count($aliases) + 1);
+                $alias->createAlias($_POST['alias_url'], $_POST['alias_destination'], count($aliases) + 1, !empty($_POST['alias_redirect']));
                 dcPage::addSuccessNotice(__('Alias successfully created.'));
                 dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
             } catch (Exception $e) {
@@ -129,6 +130,10 @@ class Manage extends dcNsProcess
                     ]),
                     (new Note())->class('form-note')->text(sprintf(__('Do not put blog URL "%s" in fields.'), dcCore::app()->blog->url)),
                     (new Para())->items([
+                        (new Checkbox('alias_redirect', false))->value(1),
+                        (new Label(__('Do visible redirection to destination'), Label::OUTSIDE_LABEL_AFTER))->for('alias_redirect')->class('classic'),
+                    ]),
+                    (new Para())->items([
                         dcCore::app()->formNonce(false),
                         (new Hidden('part', 'new')),
                         (new Submit(['do']))->value(__('Save')),
@@ -160,18 +165,21 @@ class Manage extends dcNsProcess
                 '<th class="nowrap" scope="col">' . __('Alias URL') . '</th>' .
                 '<th class="nowrap" scope="col">' . __('Alias destination') . '</th>' .
                 '<th class="nowrap" scope="col">' . __('Alias position') . '</th>' .
+                '<th class="nowrap" scope="col">' . __('Redrection') . '</th>' .
                 '</tr>' .
                 '</thead><tbody>';
 
                 foreach ($aliases as $k => $v) {
                     echo
                     '<tr class="line" id="l_' . $k . '">' .
-                    '<td>' .
+                    '<td class="minimal">' .
                     (new Input(['a[' . $k . '][alias_url]']))->size(50)->maxlenght(255)->value(Html::escapeHTML($v['alias_url']))->render() . '</td>' .
-                    '<td class="maximal">' .
+                    '<td class="minimal">' .
                     (new Input(['a[' . $k . '][alias_destination]']))->size(50)->maxlenght(255)->value(Html::escapeHTML($v['alias_destination']))->render() . '</td>' .
                     '<td class="minimal">' .
                     (new Number(['a[' . $k . '][alias_position]']))->min(1)->max(count($aliases))->default((int) $v['alias_position'])->class('position')->title(sprintf(__('position of %s'), Html::escapeHTML($v['alias_url'])))->render() . '</td>' .
+                    '<td class="maximal">' .
+                    (new Checkbox(['a[' . $k . '][alias_redirect]'], (bool) $v['alias_redirect']))->title(sprintf(__('visible redirection to %s'), Html::escapeHTML(dcCore::app()->blog->url . $v['alias_destination'])))->render() . '</td>' .
                     '</tr>';
                 }
 

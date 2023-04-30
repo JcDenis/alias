@@ -41,6 +41,7 @@ class Install extends dcNsProcess
                 ->alias_url('varchar', 255, false)
                 ->alias_destination('varchar', 255, false)
                 ->alias_position('smallint', 0, false, 1)
+                ->alias_redirect('smallint', 0, false, 0)
 
                 ->primary('pk_alias', 'blog_id', 'alias_url')
 
