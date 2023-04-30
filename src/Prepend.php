@@ -16,8 +16,9 @@ namespace Dotclear\Plugin\alias;
 
 use dcCore;
 use dcNsProcess;
+use dcUrlHandlers;
 
-class Frontend extends dcNsProcess
+class Prepend extends dcNsProcess
 {
     public static function init(): bool
     {
@@ -32,19 +33,26 @@ class Frontend extends dcNsProcess
             return false;
         }
 
-        dcCore::app()->url->register('alias', '', '^(.*)$', function (string $args): void {
-            $part = $args;
-
+        dcCore::app()->addBehavior('urlHandlerGetArgsDocument', function (dcUrlHandlers $handler): void {
+            $found = false;
+            $type  = 'alias';
+            $part  = $args = $_SERVER['URL_REQUEST_PART'];
             foreach ((new Alias())->getAliases() as $v) {
                 if (@preg_match('#^/.*/$#', $v['alias_url']) && @preg_match($v['alias_url'], $args)) {
-                    $part = preg_replace($v['alias_url'], $v['alias_destination'], $args);
+                    $part  = preg_replace($v['alias_url'], $v['alias_destination'], $args);
+                    $found = true;
 
                     break;
                 } elseif ($v['alias_url'] == $args) {
-                    $part = $v['alias_destination'];
+                    $part  = $v['alias_destination'];
+                    $found = true;
 
                     break;
                 }
+            }
+
+            if (!$found) {
+                return;
             }
 
             dcCore::app()->url->unregister('alias');
