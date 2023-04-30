@@ -64,7 +64,7 @@ class Prepend extends dcNsProcess
             }
 
             // Use visible redirection
-            if ($redir) {
+            if ($redir && !is_null(dcCore::app()->blog)) {
                 Http::redirect(dcCore::app()->blog->url . $part);
             }
 
