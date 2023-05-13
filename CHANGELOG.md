@@ -1,3 +1,7 @@
+1.7 - 2023.05.13
+- require dotclear 2.26
+- release for dc2.26 stable
+
 1.6 - 2023.05.01
 - require dotclear 2.26
 - use behavior intead of urlHandler (see README)
