@@ -1,3 +1,7 @@
+1.7.1 - 2023.06.16
+- require dotclear 2.26
+- fix non php 7.4 type hint
+
 1.7 - 2023.05.13
 - require dotclear 2.26
 - release for dc2.26 stable
