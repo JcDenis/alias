@@ -71,7 +71,7 @@ class Backend extends dcNsProcess
                 $bk->alias     = new Alias();
                 $bk->aliases   = $bk->alias->getAliases();
             },
-            'importFullV2' => function (bool|FlatBackupItem $line, FlatImportV2 $bk): void {
+            'importFullV2' => function (/*bool|FlatBackupItem */$line, FlatImportV2 $bk): void {
                 if ($line->__name == My::ALIAS_TABLE_NAME) {
                     $bk->cur_alias->clean();
                     $bk->cur_alias->setField('blog_id', (string) $line->blog_id);
@@ -81,7 +81,7 @@ class Backend extends dcNsProcess
                     $bk->cur_alias->insert();
                 }
             },
-            'importSingleV2' => function (bool|FlatBackupItem $line, FlatImportV2 $bk): void {
+            'importSingleV2' => function (/*bool|FlatBackupItem */$line, FlatImportV2 $bk): void {
                 if ($line->__name == My::ALIAS_TABLE_NAME) {
                     $found = false;
                     foreach ($bk->aliases as $v) {
