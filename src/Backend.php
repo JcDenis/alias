@@ -14,45 +14,28 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\alias;
 
-use dcAdmin;
 use dcCore;
-use dcNsProcess;
-use dcPage;
-use Dotclear\Plugin\importExport\FlatBackupItem;
-use Dotclear\Plugin\importExport\FlatExport;
-use Dotclear\Plugin\importExport\FlatImportV2;
+use Dotclear\Core\Process;
+use Dotclear\Plugin\importExport\{
+    FlatBackupItem,
+    FlatExport,
+    FlatImportV2
+};
 
-class Backend extends dcNsProcess
+class Backend extends Process
 {
     public static function init(): bool
     {
-        static::$init = defined('DC_CONTEXT_ADMIN')
-            && !is_null(dcCore::app()->auth) && !is_null(dcCore::app()->blog) //nullsafe PHP < 8.0
-            && dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
-                dcCore::app()->auth::PERMISSION_ADMIN,
-            ]), dcCore::app()->blog->id);
-
-        return static::$init;
+        return self::status(My::checkContext(My::BACKEND));
     }
 
     public static function process(): bool
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return false;
         }
 
-        // nullsafe PHP < 8.0
-        if (is_null(dcCore::app()->auth) || is_null(dcCore::app()->blog) || is_null(dcCore::app()->adminurl)) {
-            return false;
-        }
-
-        dcCore::app()->menu[dcAdmin::MENU_PLUGINS]->addItem(
-            My::name(),
-            dcCore::app()->adminurl->get('admin.plugin.' . My::id()),
-            dcPage::getPF(My::id() . '/icon.svg'),
-            preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.' . My::id())) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
-            dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([dcCore::app()->auth::PERMISSION_ADMIN]), dcCore::app()->blog->id)
-        );
+        My::addBackendMenuItem();
 
         dcCore::app()->addBehaviors([
             'exportFullV2' => function (FlatExport $exp): void {

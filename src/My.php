@@ -15,38 +15,22 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\alias;
 
 use dcCore;
+use Dotclear\Module\MyPlugin;
 
 /**
  * This module definitions.
  */
-class My
+class My extends MyPlugin
 {
     /** @var    string  Plugin table name */
     public const ALIAS_TABLE_NAME = 'alias';
 
-    /**
-     * This module id.
-     */
-    public static function id(): string
+    public static function checkCustomContext(int $context): ?bool
     {
-        return basename(dirname(__DIR__));
-    }
-
-    /**
-     * This module name.
-     */
-    public static function name(): string
-    {
-        $name = dcCore::app()->plugins->moduleInfo(self::id(), 'name');
-
-        return __(is_string($name) ? $name : self::id());
-    }
-
-    /**
-     * This module path.
-     */
-    public static function path(): string
-    {
-        return dirname(__DIR__);
+        return !in_array($context, [My::BACKEND, My::MANAGE, My::MENU]) ? null :
+            defined('DC_CONTEXT_ADMIN')
+            && dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
+                dcCore::app()->auth::PERMISSION_ADMIN,
+            ]), dcCore::app()->blog->id);
     }
 }

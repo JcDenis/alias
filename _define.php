@@ -10,7 +10,7 @@
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-if (!defined('DC_RC_PATH') || is_null(dcCore::app()->auth)) {
+if (!defined('DC_RC_PATH')) {
     return null;
 }
 
@@ -18,9 +18,9 @@ $this->registerModule(
     'alias',
     "Create aliases of your blog's URLs",
     'Olivier Meunier and contributors',
-    '1.7.1',
+    '1.8',
     [
-        'requires'    => [['core', '2.26']],
+        'requires'    => [['core', '2.27']],
         'permissions' => dcCore::app()->auth->makePermissions([
             dcCore::app()->auth::PERMISSION_ADMIN,
         ]),

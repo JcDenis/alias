@@ -15,8 +15,11 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\alias;
 
 use dcCore;
-use dcNsProcess;
-use dcPage;
+use Dotclear\Core\Process;
+use Dotclear\Core\Backend\{
+    Notices,
+    Page
+};
 use Dotclear\Helper\Html\Form\{
     Checkbox,
     Div,
@@ -36,27 +39,16 @@ use Exception;
 /**
  * Manage contributions list
  */
-class Manage extends dcNsProcess
+class Manage extends Process
 {
     public static function init(): bool
     {
-        static::$init = defined('DC_CONTEXT_ADMIN')
-            && !is_null(dcCore::app()->auth) && !is_null(dcCore::app()->blog) //nullsafe PHP < 8.0
-            && dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
-                dcCore::app()->auth::PERMISSION_ADMIN,
-            ]), dcCore::app()->blog->id);
-
-        return static::$init;
+        return self::status(My::checkContext(My::MANAGE));
     }
 
     public static function process(): bool
     {
-        if (!static::$init) {
-            return false;
-        }
-
-        // nullsafe PHP < 8.0
-        if (is_null(dcCore::app()->auth) || is_null(dcCore::app()->blog) || is_null(dcCore::app()->adminurl)) {
+        if (!self::status()) {
             return false;
         }
 
@@ -71,8 +63,8 @@ class Manage extends dcNsProcess
         if (isset($_POST['a']) && is_array($_POST['a'])) {
             try {
                 $alias->updateAliases($_POST['a']);
-                dcPage::addSuccessNotice(__('Aliases successfully updated.'));
-                dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
+                Notices::addSuccessNotice(__('Aliases successfully updated.'));
+                My::redirect();
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
             }
@@ -82,8 +74,8 @@ class Manage extends dcNsProcess
         if (isset($_POST['alias_url'])) {
             try {
                 $alias->createAlias($_POST['alias_url'], $_POST['alias_destination'], count($aliases) + 1, !empty($_POST['alias_redirect']));
-                dcPage::addSuccessNotice(__('Alias successfully created.'));
-                dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
+                Notices::addSuccessNotice(__('Alias successfully created.'));
+                My::redirect();
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
             }
@@ -94,28 +86,23 @@ class Manage extends dcNsProcess
 
     public static function render(): void
     {
-        if (!static::$init) {
-            return;
-        }
-
-        // nullsafe PHP < 8.0
-        if (is_null(dcCore::app()->blog) || is_null(dcCore::app()->adminurl)) {
+        if (!self::status()) {
             return;
         }
 
         $alias   = new Alias();
         $aliases = $alias->getAliases();
 
-        dcPage::openModule(My::name());
+        Page::openModule(My::name());
 
         if (($_REQUEST['part'] ?? 'list') == 'new') {
             echo
-            dcPage::breadcrumb([
+            Page::breadcrumb([
                 __('Plugins')   => '',
-                My::name()      => dcCore::app()->adminurl->get('admin.plugin.' . My::id(), ['part' => 'list']),
+                My::name()      => My::manageUrl(['part' => 'list']),
                 __('New alias') => '',
             ]) .
-            dcPage::notices() .
+            Notices::getNotices() .
 
             (new Div())->items([
                 (new Text('h3', __('New alias'))),
@@ -134,21 +121,22 @@ class Manage extends dcNsProcess
                         (new Label(__('Do visible redirection to destination'), Label::OUTSIDE_LABEL_AFTER))->for('alias_redirect')->class('classic'),
                     ]),
                     (new Para())->items([
-                        dcCore::app()->formNonce(false),
-                        (new Hidden('part', 'new')),
                         (new Submit(['do']))->value(__('Save')),
+                        ... My::hiddenFields([
+                            'part' => 'new',
+                        ]),
                     ]),
                 ]),
             ])->render();
         } else {
             echo
-            dcPage::breadcrumb([
+            Page::breadcrumb([
                 __('Plugins') => '',
                 My::name()    => '',
             ]) .
-            dcPage::notices() .
+            Notices::getNotices() .
             '<p class="top-add"><a class="button add" href="' .
-                dcCore::app()->adminurl->get('admin.plugin.' . My::id(), ['part' => 'new']) .
+                My::manageUrl(['part' => 'new']) .
             '">' . __('New alias') . '</a></p>';
 
             if (empty($aliases)) {
@@ -187,15 +175,16 @@ class Manage extends dcNsProcess
                 '</tbody></table></div>' .
                 '<p class="form-note">' . __('To remove an alias, empty its URL or destination.') . '</p>' .
                 (new Para())->items([
-                    dcCore::app()->formNonce(false),
-                    (new Hidden('part', 'list')),
                     (new Submit(['upd']))->value(__('Update')),
+                    ... My::hiddenFields([
+                        'part' => 'list',
+                    ]),
                 ])->render() .
                 '</form>';
             }
         }
 
-        dcPage::helpBlock('alias');
-        dcPage::closeModule();
+        Page::helpBlock('alias');
+        Page::closeModule();
     }
 }

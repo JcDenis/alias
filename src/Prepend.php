@@ -15,22 +15,20 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\alias;
 
 use dcCore;
-use dcNsProcess;
 use dcUrlHandlers;
+use Dotclear\Core\Process;
 use Dotclear\Helper\Network\Http;
 
-class Prepend extends dcNsProcess
+class Prepend extends Process
 {
     public static function init(): bool
     {
-        static::$init = defined('DC_RC_PATH');
-
-        return static::$init;
+        return self::status(My::checkContext(My::PREPEND));
     }
 
     public static function process(): bool
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return false;
         }
 
@@ -64,7 +62,7 @@ class Prepend extends dcNsProcess
             }
 
             // Use visible redirection
-            if ($redir && !is_null(dcCore::app()->blog)) {
+            if ($redir) {
                 Http::redirect(dcCore::app()->blog->url . $part);
             }
 
