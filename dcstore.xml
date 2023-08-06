@@ -5,9 +5,9 @@
     <version>1.8</version>
     <author>Olivier Meunier and contributors</author>
     <desc>Create aliases of your blog's URLs</desc>
-    <file>https://github.com/JcDenis/alias/releases/download/v1.8/plugin-alias.zip</file>
+    <file>https://gitea.dotclear.watch/JcDenis/alias/releases/download/v1.8/plugin-alias.zip</file>
     <da:dcmin>2.27</da:dcmin>
-    <da:details>https://plugins.dotaddict.org/dc2/details/alias</da:details>
-    <da:support>https://github.com/JcDenis/alias</da:support>
+    <da:details>https://git.dotclear.watch/JcDenis/alias/src/branch/master/README.md</da:details>
+    <da:support>https://git.dotclear.watch/JcDenis/alias/issues</da:support>
   </module>
 </modules>

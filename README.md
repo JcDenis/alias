@@ -45,8 +45,8 @@ so more there are aliases, more page load is slow.
 ## LINKS
 
  * License : [GNU GPL v2](https://www.gnu.org/licenses/old-licenses/lgpl-2.0.html)
- * Source & contribution : [GitHub Page](https://github.com/JcDenis/alias)
- * Packages & details:  [Dotaddict Page](https://plugins.dotaddict.org/dc2/details/alias)
+ * Source & contribution : [Gitea Page](https://git.dotclear.watch/JcDenis/alias) or [GitHub Page](https://github.com/JcDenis/alias)
+ * Packages & details:  [Gitea Page](https://git.dotclear.watch/JcDenis/alias/releases) or [Dotaddict Page](https://plugins.dotaddict.org/dc2/details/alias)
 
 ## CONTRIBUTORS
 

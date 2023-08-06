@@ -26,8 +26,8 @@ $this->registerModule(
         ]),
         'type'       => 'plugin',
         'priority'   => 2,
-        'support'    => 'https://github.com/JcDenis/alias',
-        'details'    => 'https://plugins.dotaddict.org/dc2/details/alias',
-        'repository' => 'https://raw.githubusercontent.com/JcDenis/alias/master/dcstore.xml',
+        'support'    => 'https://git.dotclear.watch/JcDenis/alias/issues',
+        'details'    => 'https://git.dotclear.watch/JcDenis/alias/src/branch/master/README.md',
+        'repository' => 'https://git.dotclear.watch/JcDenis/alias/raw/branch/master/dcstore.xml',
     ]
 );

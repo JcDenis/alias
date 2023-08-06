@@ -1,3 +1,8 @@
+1.9 - 2023.08.06
+- require Dotclear 2.27
+- require PHP 7.4+
+- move third party repository
+
 1.8 - 2023.07.30
 - require Dotclear 2.27
 - require PHP 7.4+
