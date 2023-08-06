@@ -46,7 +46,7 @@ class Prepend extends Process
                     $redir = !empty($v['alias_redirect']);
 
                     break;
-                // single alias using "url" to "destination"
+                    // single alias using "url" to "destination"
                 } elseif ($v['alias_url'] == $args) {
                     $part  = $v['alias_destination'];
                     $found = true;

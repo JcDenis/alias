@@ -18,7 +18,7 @@ $this->registerModule(
     'alias',
     "Create aliases of your blog's URLs",
     'Olivier Meunier and contributors',
-    '1.8',
+    '1.9',
     [
         'requires'    => [['core', '2.27']],
         'permissions' => dcCore::app()->auth->makePermissions([
