@@ -5,7 +5,7 @@
     <version>1.9</version>
     <author>Olivier Meunier and contributors</author>
     <desc>Create aliases of your blog's URLs</desc>
-    <file>https://gitea.dotclear.watch/JcDenis/alias/releases/download/v1.9/plugin-alias.zip</file>
+    <file>https://git.dotclear.watch/JcDenis/alias/releases/download/v1.9/plugin-alias.zip</file>
     <da:dcmin>2.27</da:dcmin>
     <da:details>https://git.dotclear.watch/JcDenis/alias/src/branch/master/README.md</da:details>
     <da:support>https://git.dotclear.watch/JcDenis/alias/issues</da:support>
