@@ -1,24 +1,22 @@
 <?php
-/**
- * @brief alias, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Olivier Meunier and contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\alias;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Process;
 use Dotclear\Database\Structure;
 use Exception;
 
+/**
+ * @brief       alias install class.
+ * @ingroup     alias
+ *
+ * @author      Olivier Meunier (author)
+ * @author      Jean-Christian Denis (latest)
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
+ */
 class Install extends Process
 {
     public static function init(): bool
@@ -33,8 +31,8 @@ class Install extends Process
         }
 
         try {
-            $s = new Structure(dcCore::app()->con, dcCore::app()->prefix);
-            $s->__get(My::ALIAS_TABLE_NAME)
+            $s = new Structure(App::con(), App::con()->prefix());
+            $s->__get(Alias::ALIAS_TABLE_NAME)
                 ->field('blog_id', 'varchar', 32, false)
                 ->field('alias_url', 'varchar', 255, false)
                 ->field('alias_destination', 'varchar', 255, false)
@@ -49,11 +47,11 @@ class Install extends Process
                 ->reference('fk_alias_blog', 'blog_id', 'blog', 'blog_id', 'cascade', 'cascade')
             ;
 
-            (new Structure(dcCore::app()->con, dcCore::app()->prefix))->synchronize($s);
+            (new Structure(App::con(), App::con()->prefix()))->synchronize($s);
 
             return true;
         } catch (Exception $e) {
-            dcCore::app()->error->add($e->getMessage());
+            App::error()->add($e->getMessage());
 
             return false;
         }

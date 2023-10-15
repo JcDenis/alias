@@ -1,20 +1,10 @@
 <?php
-/**
- * @brief alias, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Olivier Meunier and contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\alias;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Process;
 use Dotclear\Plugin\importExport\{
     FlatBackupItem,
@@ -22,6 +12,14 @@ use Dotclear\Plugin\importExport\{
     FlatImportV2
 };
 
+/**
+ * @brief       alias backend class.
+ * @ingroup     alias
+ *
+ * @author      Olivier Meunier (author)
+ * @author      Jean-Christian Denis (latest)
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
+ */
 class Backend extends Process
 {
     public static function init(): bool
@@ -37,25 +35,25 @@ class Backend extends Process
 
         My::addBackendMenuItem();
 
-        dcCore::app()->addBehaviors([
+        App::behavior()->addBehaviors([
             'exportFullV2' => function (FlatExport $exp): void {
-                $exp->exportTable(My::ALIAS_TABLE_NAME);
+                $exp->exportTable(Alias::ALIAS_TABLE_NAME);
             },
             'exportSingleV2' => function (FlatExport $exp, ?string $blog_id): void {
                 $exp->export(
                     'alias',
                     'SELECT alias_url, alias_destination, alias_position ' .
-                    'FROM ' . dcCore::app()->prefix . My::ALIAS_TABLE_NAME . ' A ' .
+                    'FROM ' . App::con()->prefix() . Alias::ALIAS_TABLE_NAME . ' A ' .
                     "WHERE A.blog_id = '" . $blog_id . "'"
                 );
             },
             'importInitV2' => function (FlatImportV2 $bk): void {
-                $bk->cur_alias = dcCore::app()->con->openCursor(dcCore::app()->prefix . My::ALIAS_TABLE_NAME);
+                $bk->cur_alias = App::con()->openCursor(App::con()->prefix() . Alias::ALIAS_TABLE_NAME);
                 $bk->alias     = new Alias();
                 $bk->aliases   = $bk->alias->getAliases();
             },
             'importFullV2' => function (/*bool|FlatBackupItem */$line, FlatImportV2 $bk): void {
-                if ($line->__name == My::ALIAS_TABLE_NAME) {
+                if ($line->__name == Alias::ALIAS_TABLE_NAME) {
                     $bk->cur_alias->clean();
                     $bk->cur_alias->setField('blog_id', (string) $line->blog_id);
                     $bk->cur_alias->setField('alias_url', (string) $line->alias_url);
@@ -65,7 +63,7 @@ class Backend extends Process
                 }
             },
             'importSingleV2' => function (/*bool|FlatBackupItem */$line, FlatImportV2 $bk): void {
-                if ($line->__name == My::ALIAS_TABLE_NAME) {
+                if ($line->__name == Alias::ALIAS_TABLE_NAME) {
                     $found = false;
                     foreach ($bk->aliases as $v) {
                         if ($v['alias_url'] == $line->alias_url) {

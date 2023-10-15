@@ -1,20 +1,10 @@
 <?php
-/**
- * @brief alias, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Olivier Meunier and contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\alias;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Process;
 use Dotclear\Core\Backend\{
     Notices,
@@ -37,7 +27,12 @@ use Dotclear\Helper\Html\Html;
 use Exception;
 
 /**
- * Manage contributions list
+ * @brief       alias manage class.
+ * @ingroup     alias
+ *
+ * @author      Olivier Meunier (author)
+ * @author      Jean-Christian Denis (latest)
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class Manage extends Process
 {
@@ -66,7 +61,7 @@ class Manage extends Process
                 Notices::addSuccessNotice(__('Aliases successfully updated.'));
                 My::redirect();
             } catch (Exception $e) {
-                dcCore::app()->error->add($e->getMessage());
+                App::error()->add($e->getMessage());
             }
         }
 
@@ -77,7 +72,7 @@ class Manage extends Process
                 Notices::addSuccessNotice(__('Alias successfully created.'));
                 My::redirect();
             } catch (Exception $e) {
-                dcCore::app()->error->add($e->getMessage());
+                App::error()->add($e->getMessage());
             }
         }
 
@@ -106,7 +101,7 @@ class Manage extends Process
 
             (new Div())->items([
                 (new Text('h3', __('New alias'))),
-                (new Form(My::id() . '_form'))->method('post')->action(dcCore::app()->admin->getPageURL())->fields([
+                (new Form(My::id() . '_form'))->method('post')->action(App::backend()->getPageURL())->fields([
                     (new Para())->class('field')->items([
                         (new Label(__('Alias URL:'), Label::OUTSIDE_LABEL_BEFORE))->for('alias_url'),
                         (new Input('alias_url'))->size(50)->maxlenght(255),
@@ -115,7 +110,7 @@ class Manage extends Process
                         (new Label(__('Alias destination:'), Label::OUTSIDE_LABEL_BEFORE))->for('alias_destination'),
                         (new Input('alias_destination'))->size(50)->maxlenght(255),
                     ]),
-                    (new Note())->class('form-note')->text(sprintf(__('Do not put blog URL "%s" in fields.'), dcCore::app()->blog->url)),
+                    (new Note())->class('form-note')->text(sprintf(__('Do not put blog URL "%s" in fields.'), App::blog()->url())),
                     (new Para())->items([
                         (new Checkbox('alias_redirect', false))->value(1),
                         (new Label(__('Do visible redirection to destination'), Label::OUTSIDE_LABEL_AFTER))->for('alias_redirect')->class('classic'),
@@ -143,7 +138,7 @@ class Manage extends Process
                 echo '<p>' . __('No alias') . '</p>';
             } else {
                 echo
-                '<form action="' . dcCore::app()->admin->getPageURL() . '" method="post">' .
+                '<form action="' . App::backend()->getPageURL() . '" method="post">' .
                 '<p>' . sprintf(__('There is %s alias.', 'There are %s aliases.', count($aliases)), count($aliases)) . '</p>' .
                 '<div class="table-outer">' .
                 '<table>' .
@@ -167,7 +162,7 @@ class Manage extends Process
                     '<td class="minimal">' .
                     (new Number(['a[' . $k . '][alias_position]']))->min(1)->max(count($aliases))->default((int) $v['alias_position'])->class('position')->title(sprintf(__('position of %s'), Html::escapeHTML($v['alias_url'])))->render() . '</td>' .
                     '<td class="maximal">' .
-                    (new Checkbox(['a[' . $k . '][alias_redirect]'], (bool) $v['alias_redirect']))->title(sprintf(__('visible redirection to %s'), Html::escapeHTML(dcCore::app()->blog->url . $v['alias_destination'])))->render() . '</td>' .
+                    (new Checkbox(['a[' . $k . '][alias_redirect]'], (bool) $v['alias_redirect']))->title(sprintf(__('visible redirection to %s'), Html::escapeHTML(App::blog()->url() . $v['alias_destination'])))->render() . '</td>' .
                     '</tr>';
                 }
 

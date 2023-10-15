@@ -1,17 +1,11 @@
 <?php
 /**
- * @brief alias, a plugin for Dotclear 2
+ * @file
+ * @brief       The plugin alias resources
+ * @ingroup     alias
  *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Olivier Meunier and contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
+ * @author      Olivier Meunier (author)
+ * @author      Jean-Christian Denis (latest)
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-if (!defined('DC_RC_PATH')) {
-    return;
-}
-
-dcCore::app()->resources['help']['alias'] = __DIR__ . '/help/help.html';
+\Dotclear\App::backend()->resources()->set('help', 'alias', __DIR__ . '/help/help.html');

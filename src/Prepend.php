@@ -1,24 +1,22 @@
 <?php
-/**
- * @brief alias, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Olivier Meunier and contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\alias;
 
-use dcCore;
-use dcUrlHandlers;
+use Dotclear\App;
+use Dotclear\Core\Frontend\Url;
 use Dotclear\Core\Process;
 use Dotclear\Helper\Network\Http;
 
+/**
+ * @brief       alias prepend class.
+ * @ingroup     alias
+ *
+ * @author      Olivier Meunier (author)
+ * @author      Jean-Christian Denis (latest)
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
+ */
 class Prepend extends Process
 {
     public static function init(): bool
@@ -32,7 +30,7 @@ class Prepend extends Process
             return false;
         }
 
-        dcCore::app()->addBehavior('urlHandlerGetArgsDocument', function (dcUrlHandlers $handler): void {
+        App::behavior()->addBehavior('urlHandlerGetArgsDocument', function (Url $handler): void {
             $found = $redir = false;
             $type  = '';
             $part  = $args = $_SERVER['URL_REQUEST_PART'];
@@ -63,19 +61,20 @@ class Prepend extends Process
 
             // Use visible redirection
             if ($redir) {
-                Http::redirect(dcCore::app()->blog->url . $part);
+                Http::redirect(App::blog()->url() . $part);
             }
 
             // regain URL type
             $_SERVER['URL_REQUEST_PART'] = $part;
-            dcCore::app()->url->getArgs($part, $type, $args);
+            $handler->getArgs($part, $type, $args);
 
             // call real handler
             if (!$type) {
-                dcCore::app()->url->callDefaultHandler($args);
+                $handler->callDefaultHandler($args);
             } else {
-                dcCore::app()->url->callHandler($type, $args);
+                $handler->callHandler($type, $args);
             }
+            exit;
         });
 
         return true;

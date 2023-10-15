@@ -1,23 +1,20 @@
 <?php
-/**
- * @brief alias, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Olivier Meunier and contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\alias;
 
-use dcCore;
 use Dotclear\Core\Process;
 use Dotclear\Plugin\Uninstaller\Uninstaller;
 
+/**
+ * @brief       alias uninstall class.
+ * @ingroup     alias
+ *
+ * @author      Olivier Meunier (author)
+ * @author      Jean-Christian Denis (latest)
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
+ */
 class Uninstall extends Process
 {
     public static function init(): bool
@@ -27,7 +24,7 @@ class Uninstall extends Process
 
     public static function process(): bool
     {
-        if (!self::status() || !dcCore::app()->plugins->moduleExists('Uninstaller')) {
+        if (!self::status()) {
             return false;
         }
 
@@ -35,7 +32,7 @@ class Uninstall extends Process
             ->addUserAction(
                 'tables',
                 'delete',
-                My::ALIAS_TABLE_NAME
+                Alias::ALIAS_TABLE_NAME
             )
             ->addUserAction(
                 'plugins',
@@ -51,7 +48,7 @@ class Uninstall extends Process
             ->addDirectAction(
                 'tables',
                 'delete',
-                My::ALIAS_TABLE_NAME
+                Alias::ALIAS_TABLE_NAME
             )
             ->addDirectAction(
                 'plugins',
