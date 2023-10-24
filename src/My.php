@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\alias;
 
-use Dotclear\App;
 use Dotclear\Module\MyPlugin;
 
 /**
@@ -17,15 +16,5 @@ use Dotclear\Module\MyPlugin;
  */
 class My extends MyPlugin
 {
-    public static function checkCustomContext(int $context): ?bool
-    {
-        return match ($context) {
-            My::BACKEND, My::MANAGE, My::MENU => App::task()->checkContext('BACKEND')
-                && App::auth()->check(App::auth()->makePermissions([
-                    App::auth()::PERMISSION_ADMIN,
-                ]), App::blog()->id()),
-
-            default => null,
-        };
-    }
+    // Use default permissions
 }

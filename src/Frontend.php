@@ -10,18 +10,18 @@ use Dotclear\Core\Process;
 use Dotclear\Helper\Network\Http;
 
 /**
- * @brief       alias prepend class.
+ * @brief       alias frontend class.
  * @ingroup     alias
  *
  * @author      Olivier Meunier (author)
  * @author      Jean-Christian Denis (latest)
  * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-class Prepend extends Process
+class Frontend extends Process
 {
     public static function init(): bool
     {
-        return self::status(My::checkContext(My::PREPEND));
+        return self::status(My::checkContext(My::FRONTEND));
     }
 
     public static function process(): bool
@@ -36,19 +36,19 @@ class Prepend extends Process
             $part  = $args = $_SERVER['URL_REQUEST_PART'];
 
             // load all Aliases
-            foreach ((new Alias())->getAliases() as $v) {
+            foreach ((new Alias())->getAliases() as $alias) {
                 // multi alias using "/url/" to "destination"
-                if (@preg_match('#^/.*/$#', $v['alias_url']) && @preg_match($v['alias_url'], $args)) {
-                    $part  = preg_replace($v['alias_url'], $v['alias_destination'], $args);
+                if (@preg_match('#^/.*/$#', $alias->url) && @preg_match($alias->url, $args)) {
+                    $part  = preg_replace($alias->url, $alias->destination, $args);
                     $found = true;
-                    $redir = !empty($v['alias_redirect']);
+                    $redir = !empty($alias->redirect);
 
                     break;
                     // single alias using "url" to "destination"
-                } elseif ($v['alias_url'] == $args) {
-                    $part  = $v['alias_destination'];
+                } elseif ($alias->url == $args) {
+                    $part  = $alias->destination;
                     $found = true;
-                    $redir = !empty($v['alias_redirect']);
+                    $redir = !empty($alias->redirect);
 
                     break;
                 }

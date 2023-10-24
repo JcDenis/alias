@@ -31,23 +31,19 @@ class Alias
     /**
      * Stack of aliases.
      *
-     * @var     array<int, array<string, string>>   $aliases
+     * @var     array<int, AliasRow>    $aliases
      */
     protected array $aliases = [];
 
     /**
      * Get aliases.
      *
-     * @return  array<int, array<string, string>>   Stack of aliases
+     * @return  array<int, AliasRow>    Stack of aliases
      */
     public function getAliases(): array
     {
         if (!empty($this->aliases)) {
             return $this->aliases;
-        }
-
-        if (!App::blog()->isDefined()) {
-            return [];
         }
 
         $sql = new SelectStatement();
@@ -62,7 +58,11 @@ class Alias
             ->order('alias_position ASC')
             ->select();
 
-        $this->aliases = is_null($rs) ? [] : $rs->rows();
+        if (!is_null($rs)) {
+            while ($rs->fetch()) {
+                $this->aliases[] = AliasRow::newFromRecord($rs);
+            }
+        }
 
         return $this->aliases;
     }
@@ -70,24 +70,24 @@ class Alias
     /**
      * Update aliases stack.
      *
-     * @param   array<int, array<string, string>>   $aliases    The alias stack
+     * @param   array<int, AliasRow>    $aliases    The alias stack
      */
     public function updateAliases(array $aliases): void
     {
-        usort($aliases, fn ($a, $b) => (int) $a['alias_position'] <=> (int) $b['alias_position']);
-        foreach ($aliases as $v) {
-            if (!isset($v['alias_url']) || !isset($v['alias_destination'])) {
+        foreach ($aliases as $row) {
+            if (!is_a($row, AliasRow::class)) {
                 throw new Exception(__('Invalid aliases definitions'));
             }
         }
+        usort($aliases, fn ($a, $b) => $a->position <=> $b->position);
 
         App::con()->begin();
 
         try {
             $this->deleteAliases();
-            foreach ($aliases as $k => $v) {
-                if (!empty($v['alias_url']) && !empty($v['alias_destination'])) {
-                    $this->createAlias($v['alias_url'], $v['alias_destination'], $k + 1, !empty($v['alias_redirect']));
+            foreach ($aliases as $k => $alias) {
+                if (!empty($alias->url) && !empty($alias->destination)) {
+                    $this->createAlias(new AliasRow($alias->url, $alias->destination, $k + 1, $alias->redirect));
                 }
             }
 
@@ -102,19 +102,16 @@ class Alias
     /**
      * Create an alias.
      *
-     * @param   string  $url            The URL
-     * @param   string  $destination    The destination
-     * @param   int     $position       The position
-     * @param   bool    $redirect       Do redirection
+     * @param   AliasRow    $alias  The new Alias descriptor
      */
-    public function createAlias(string $url, string $destination, int $position, bool $redirect): void
+    public function createAlias(AliasRow $alias):void
     {
         if (!App::blog()->isDefined()) {
             return;
         }
 
-        $url         = self::removeBlogUrl($url);
-        $destination = self::removeBlogUrl($destination);
+        $url         = self::removeBlogUrl($alias->url);
+        $destination = self::removeBlogUrl($alias->destination);
 
         if (empty($url)) {
             throw new Exception(__('Alias URL is empty.'));
@@ -125,10 +122,10 @@ class Alias
 
         $cur = App::con()->openCursor(App::con()->prefix() . Alias::ALIAS_TABLE_NAME);
         $cur->setField('blog_id', App::blog()->id());
-        $cur->setField('alias_url', (string) $url);
-        $cur->setField('alias_destination', (string) $destination);
-        $cur->setField('alias_position', abs((int) $position));
-        $cur->setField('alias_redirect', (int) $redirect);
+        $cur->setField('alias_url', $url);
+        $cur->setField('alias_destination',$destination);
+        $cur->setField('alias_position', $alias->position);
+        $cur->setField('alias_redirect', (int) $alias->redirect);
         $cur->insert();
     }
 
@@ -139,10 +136,6 @@ class Alias
      */
     public function deleteAlias(string $url): void
     {
-        if (!App::blog()->isDefined()) {
-            return;
-        }
-
         $sql = new DeleteStatement();
         $sql->from(App::con()->prefix() . Alias::ALIAS_TABLE_NAME)
             ->where('blog_id = ' . $sql->quote(App::blog()->id()))
@@ -155,10 +148,6 @@ class Alias
      */
     public function deleteAliases(): void
     {
-        if (!App::blog()->isDefined()) {
-            return;
-        }
-
         $sql = new DeleteStatement();
         $sql->from(App::con()->prefix() . Alias::ALIAS_TABLE_NAME)
             ->where('blog_id = ' . $sql->quote(App::blog()->id()))
@@ -174,6 +163,6 @@ class Alias
      */
     public static function removeBlogUrl(string $url): string
     {
-        return App::blog()->isDefined() ? str_replace(App::blog()->url(), '', trim($url)) : trim($url);
+        return str_replace(App::blog()->url(), '', trim($url));
     }
 }

@@ -51,13 +51,22 @@ class Manage extends Process
             return true;
         }
 
-        $alias   = new Alias();
-        $aliases = $alias->getAliases();
+        $utils   = new Alias();
+        $aliases = $utils->getAliases();
 
         # Update aliases
         if (isset($_POST['a']) && is_array($_POST['a'])) {
             try {
-                $alias->updateAliases($_POST['a']);
+                $stack = [];
+                foreach($_POST['a'] as $alias) {
+                    $stack[] = new AliasRow(
+                        $alias['alias_url'] ?? '',
+                        $alias['alias_destination'] ?? '',
+                        (int) ($alias['alias_position'] ?? 0),
+                        !empty($alias['alias_redirect']),
+                    );
+                }
+                $utils->updateAliases($stack);
                 Notices::addSuccessNotice(__('Aliases successfully updated.'));
                 My::redirect();
             } catch (Exception $e) {
@@ -68,7 +77,7 @@ class Manage extends Process
         # New alias
         if (isset($_POST['alias_url'])) {
             try {
-                $alias->createAlias($_POST['alias_url'], $_POST['alias_destination'], count($aliases) + 1, !empty($_POST['alias_redirect']));
+                $utils->createAlias(new AliasRow($_POST['alias_url'], $_POST['alias_destination'], count($aliases) + 1, !empty($_POST['alias_redirect'])));
                 Notices::addSuccessNotice(__('Alias successfully created.'));
                 My::redirect();
             } catch (Exception $e) {
@@ -85,8 +94,7 @@ class Manage extends Process
             return;
         }
 
-        $alias   = new Alias();
-        $aliases = $alias->getAliases();
+        $aliases = (new Alias())->getAliases();
 
         Page::openModule(My::name());
 
@@ -104,11 +112,11 @@ class Manage extends Process
                 (new Form(My::id() . '_form'))->method('post')->action(App::backend()->getPageURL())->fields([
                     (new Para())->class('field')->items([
                         (new Label(__('Alias URL:'), Label::OUTSIDE_LABEL_BEFORE))->for('alias_url'),
-                        (new Input('alias_url'))->size(50)->maxlenght(255),
+                        (new Input('alias_url'))->size(50)->maxlength(255),
                     ]),
                     (new Para())->class('field')->items([
                         (new Label(__('Alias destination:'), Label::OUTSIDE_LABEL_BEFORE))->for('alias_destination'),
-                        (new Input('alias_destination'))->size(50)->maxlenght(255),
+                        (new Input('alias_destination'))->size(50)->maxlength(255),
                     ]),
                     (new Note())->class('form-note')->text(sprintf(__('Do not put blog URL "%s" in fields.'), App::blog()->url())),
                     (new Para())->items([
@@ -152,17 +160,17 @@ class Manage extends Process
                 '</tr>' .
                 '</thead><tbody>';
 
-                foreach ($aliases as $k => $v) {
+                foreach ($aliases as $k => $alias) {
                     echo
                     '<tr class="line" id="l_' . $k . '">' .
                     '<td class="minimal">' .
-                    (new Input(['a[' . $k . '][alias_url]']))->size(50)->maxlenght(255)->value(Html::escapeHTML($v['alias_url']))->render() . '</td>' .
+                    (new Input(['a[' . $k . '][alias_url]']))->size(50)->maxlength(255)->value(Html::escapeHTML($alias->url))->render() . '</td>' .
                     '<td class="minimal">' .
-                    (new Input(['a[' . $k . '][alias_destination]']))->size(50)->maxlenght(255)->value(Html::escapeHTML($v['alias_destination']))->render() . '</td>' .
+                    (new Input(['a[' . $k . '][alias_destination]']))->size(50)->maxlength(255)->value(Html::escapeHTML($alias->destination))->render() . '</td>' .
                     '<td class="minimal">' .
-                    (new Number(['a[' . $k . '][alias_position]']))->min(1)->max(count($aliases))->default((int) $v['alias_position'])->class('position')->title(sprintf(__('position of %s'), Html::escapeHTML($v['alias_url'])))->render() . '</td>' .
+                    (new Number(['a[' . $k . '][alias_position]']))->min(1)->max(count($aliases))->default($alias->position)->class('position')->title(sprintf(__('position of %s'), Html::escapeHTML($alias->url)))->render() . '</td>' .
                     '<td class="maximal">' .
-                    (new Checkbox(['a[' . $k . '][alias_redirect]'], (bool) $v['alias_redirect']))->title(sprintf(__('visible redirection to %s'), Html::escapeHTML(App::blog()->url() . $v['alias_destination'])))->render() . '</td>' .
+                    (new Checkbox(['a[' . $k . '][alias_redirect]'], $alias->redirect))->title(sprintf(__('visible redirection to %s'), Html::escapeHTML(App::blog()->url() . $alias->destination)))->render() . '</td>' .
                     '</tr>';
                 }
 
