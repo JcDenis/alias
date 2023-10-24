@@ -1,11 +1,11 @@
-alias 1.10 - 2023.10.15
+alias 1.11 - 2023.10.23
 ===========================================================
 * Require Dotclear 2.28
 * Require PHP 8.1
 * Use class for alias row
 * Code review
 
-alias 1.11 - 2023.10.23
+alias 1.10 - 2023.10.15
 ===========================================================
 * require Dotclear 2.28
 * require PHP 8.1
