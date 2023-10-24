@@ -56,7 +56,7 @@ class PluginImportExportBehaviors
             $bk->__get('cur_alias')->insert();
         }
     }
-    
+
     public static function importSingleV2(bool|FlatBackupItem $line, FlatImportV2 $bk): void
     {
         if (!is_bool($line) && $line->__name == Alias::ALIAS_TABLE_NAME) {

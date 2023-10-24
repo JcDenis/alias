@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\alias;
 
-use Dotclear\App;
 use Dotclear\Database\MetaRecord;
 
 /**

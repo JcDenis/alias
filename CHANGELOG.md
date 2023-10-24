@@ -1,5 +1,12 @@
 alias 1.10 - 2023.10.15
 ===========================================================
+* Require Dotclear 2.28
+* Require PHP 8.1
+* Use class for alias row
+* Code review
+
+alias 1.11 - 2023.10.23
+===========================================================
 * require Dotclear 2.28
 * require PHP 8.1
 * Upgrade to Dotclear 2.28

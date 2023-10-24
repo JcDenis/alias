@@ -58,9 +58,9 @@ class Manage extends Process
         if (isset($_POST['a']) && is_array($_POST['a'])) {
             try {
                 $stack = [];
-                foreach($_POST['a'] as $alias) {
+                foreach ($_POST['a'] as $alias) {
                     $stack[] = new AliasRow(
-                        $alias['alias_url'] ?? '',
+                        $alias['alias_url']         ?? '',
                         $alias['alias_destination'] ?? '',
                         (int) ($alias['alias_position'] ?? 0),
                         !empty($alias['alias_redirect']),

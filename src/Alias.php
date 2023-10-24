@@ -104,7 +104,7 @@ class Alias
      *
      * @param   AliasRow    $alias  The new Alias descriptor
      */
-    public function createAlias(AliasRow $alias):void
+    public function createAlias(AliasRow $alias): void
     {
         if (!App::blog()->isDefined()) {
             return;
@@ -123,7 +123,7 @@ class Alias
         $cur = App::con()->openCursor(App::con()->prefix() . Alias::ALIAS_TABLE_NAME);
         $cur->setField('blog_id', App::blog()->id());
         $cur->setField('alias_url', $url);
-        $cur->setField('alias_destination',$destination);
+        $cur->setField('alias_destination', $destination);
         $cur->setField('alias_position', $alias->position);
         $cur->setField('alias_redirect', (int) $alias->redirect);
         $cur->insert();
