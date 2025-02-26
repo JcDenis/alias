@@ -1,10 +1,11 @@
 # README
 
-[![Release](https://img.shields.io/badge/release-1.11-a2cbe9.svg)](https://git.dotclear.watch/JcDenis/alias/releases)
-![Date](https://img.shields.io/badge/date-2023.10.23-c44d58.svg)
-[![Dotclear](https://img.shields.io/badge/dotclear-v2.28-137bbb.svg)](https://fr.dotclear.org/download)
+
+[![Release](https://img.shields.io/github/v/release/jcdenis/alias?color=lightblue)](https://github.com/JcDenis/alias/releases)
+![Date](https://img.shields.io/github/release-date/jcdenis/alias?color=red)
+[![Dotclear](https://img.shields.io/badge/dotclear-v2.33-137bbb.svg)](https://fr.dotclear.org/download)
 [![Dotaddict](https://img.shields.io/badge/dotaddict-official-9ac123.svg)](https://plugins.dotaddict.org/dc2/details/alias)
-[![License](https://img.shields.io/badge/license-GPL--2.0-ececec.svg)](https://git.dotclear.watch/JcDenis/alias/src/branch/master/LICENSE)
+[![License](https://img.shields.io/github/license/jcdenis/alias?color=white)](https://github.com/JcDenis/alias/src/branch/master/LICENSE)
 
 ## ABOUT
 
@@ -38,10 +39,10 @@ so more there are aliases, more page load is slow.
 
 ## LINKS
 
-* [License](https://git.dotclear.watch/JcDenis/alias/src/branch/master/LICENSE)
-* [Packages & details](https://git.dotclear.watch/JcDenis/alias/releases) (or on [Dotaddict](https://plugins.dotaddict.org/dc2/details/alias))
-* [Sources & contributions](https://git.dotclear.watch/JcDenis/alias) (or on [GitHub](https://github.com/JcDenis/alias))
-* [Issues & security](https://git.dotclear.watch/JcDenis/alias/issues) (or on [GitHub](https://github.com/JcDenis/alias/issues))
+* [License](https://github.com/JcDenis/alias/src/branch/master/LICENSE)
+* [Packages & details](https://github.com/JcDenis/alias/releases) (or on [Dotaddict](https://plugins.dotaddict.org/dc2/details/alias))
+* [Sources & contributions](https://github.com/JcDenis/alias))
+* [Issues & security](https://github.com/JcDenis/alias/issues)
 
 ## CONTRIBUTORS
 
