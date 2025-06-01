@@ -1,3 +1,11 @@
+alias 2.0 - 2025.06.01
+===========================================================
+* Bump Dotclear from 2.28 to 2.34
+* Use Helper/Form
+* Use dragndrop script for alias order
+* Move to static class
+* Code reviews
+
 alias 1.11.1 - 2025.03.02
 ===========================================================
 * Require Dotclear 2.28

@@ -18,9 +18,9 @@ $this->registerModule(
     'alias',
     "Create aliases of your blog's URLs",
     'Olivier Meunier and contributors',
-    '1.11.1',
+    '2.0',
     [
-        'requires'    => [['core', '2.28']],
+        'requires'    => [['core', '2.34']],
         'permissions' => 'My',
         'type'        => 'plugin',
         'priority'    => 2,
