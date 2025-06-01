@@ -36,7 +36,7 @@ class Frontend extends Process
             $part  = $args = $_SERVER['URL_REQUEST_PART'];
 
             // load all Aliases
-            foreach ((new Alias())->getAliases() as $alias) {
+            foreach (Alias::getAliases() as $alias) {
                 // multi alias using "/url/" to "destination"
                 if (@preg_match('#^/.*/$#', $alias->url) && @preg_match($alias->url, $args)) {
                     $part  = preg_replace($alias->url, $alias->destination, $args);

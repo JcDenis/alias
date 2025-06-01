@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\alias;
 
 use Dotclear\App;
-use Dotclear\Database\Statement\{
-    DeleteStatement,
-    SelectStatement
-};
+use Dotclear\Database\{ Cursor, Structure };
+use Dotclear\Database\Statement\{ DeleteStatement, SelectStatement };
 use Exception;
 
 /**
@@ -33,38 +31,48 @@ class Alias
      *
      * @var     array<int, AliasRow>    $aliases
      */
-    protected array $aliases = [];
+    protected static array $aliases = [];
+
+    /**
+     * Open a database table cursor.
+     *
+     * @return  Cursor  The blog database table cursor
+     */
+    public static function openAliasCursor(): Cursor
+    {
+        return App::con()->openCursor(App::con()->prefix() . self::ALIAS_TABLE_NAME);
+    }
 
     /**
      * Get aliases.
      *
      * @return  array<int, AliasRow>    Stack of aliases
      */
-    public function getAliases(): array
+    public static function getAliases(): array
     {
-        if (!empty($this->aliases)) {
-            return $this->aliases;
-        }
+        if (empty(self::$aliases)) {
+            $sql = new SelectStatement();
+            $rs  = $sql->from(App::con()->prefix() . self::ALIAS_TABLE_NAME)
+                ->columns([
+                    'alias_url',
+                    'alias_destination',
+                    'alias_position',
+                    'alias_redirect',
+                ])
+                ->where('blog_id = ' . $sql->quote(App::blog()->id()))
+                ->order('alias_position ASC')
+                ->select();
 
-        $sql = new SelectStatement();
-        $rs  = $sql->from(App::con()->prefix() . Alias::ALIAS_TABLE_NAME)
-            ->columns([
-                'alias_url',
-                'alias_destination',
-                'alias_position',
-                'alias_redirect',
-            ])
-            ->where('blog_id = ' . $sql->quote(App::blog()->id()))
-            ->order('alias_position ASC')
-            ->select();
-
-        if (!is_null($rs)) {
-            while ($rs->fetch()) {
-                $this->aliases[] = AliasRow::newFromRecord($rs);
+            if (!is_null($rs)) {
+                $aliases = [];
+                while ($rs->fetch()) {
+                    $aliases[] = AliasRow::newFromRecord($rs);
+                }
+                self::$aliases = $aliases;
             }
         }
 
-        return $this->aliases;
+        return self::$aliases;
     }
 
     /**
@@ -72,7 +80,7 @@ class Alias
      *
      * @param   array<int, AliasRow>    $aliases    The alias stack
      */
-    public function updateAliases(array $aliases): void
+    public static function updateAliases(array $aliases): void
     {
         foreach ($aliases as $row) {
             if (!is_a($row, AliasRow::class)) {
@@ -84,10 +92,10 @@ class Alias
         App::con()->begin();
 
         try {
-            $this->deleteAliases();
+            self::deleteAliases();
             foreach ($aliases as $k => $alias) {
                 if (!empty($alias->url) && !empty($alias->destination)) {
-                    $this->createAlias(new AliasRow($alias->url, $alias->destination, $k + 1, $alias->redirect));
+                    self::createAlias(new AliasRow($alias->url, $alias->destination, $k + 1, $alias->redirect));
                 }
             }
 
@@ -104,7 +112,7 @@ class Alias
      *
      * @param   AliasRow    $alias  The new Alias descriptor
      */
-    public function createAlias(AliasRow $alias): void
+    public static function createAlias(AliasRow $alias): void
     {
         if (!App::blog()->isDefined()) {
             return;
@@ -120,7 +128,7 @@ class Alias
             throw new Exception(__('Alias destination is empty.'));
         }
 
-        $cur = App::con()->openCursor(App::con()->prefix() . Alias::ALIAS_TABLE_NAME);
+        $cur = self::openAliasCursor();
         $cur->setField('blog_id', App::blog()->id());
         $cur->setField('alias_url', $url);
         $cur->setField('alias_destination', $destination);
@@ -134,10 +142,10 @@ class Alias
      *
      * @param   string  $url    The alias URL
      */
-    public function deleteAlias(string $url): void
+    public static function deleteAlias(string $url): void
     {
         $sql = new DeleteStatement();
-        $sql->from(App::con()->prefix() . Alias::ALIAS_TABLE_NAME)
+        $sql->from(App::con()->prefix() . self::ALIAS_TABLE_NAME)
             ->where('blog_id = ' . $sql->quote(App::blog()->id()))
             ->and('alias_url = ' . $sql->quote($url))
             ->delete();
@@ -146,10 +154,10 @@ class Alias
     /**
      * Delete all aliases.
      */
-    public function deleteAliases(): void
+    public static function deleteAliases(): void
     {
         $sql = new DeleteStatement();
-        $sql->from(App::con()->prefix() . Alias::ALIAS_TABLE_NAME)
+        $sql->from(App::con()->prefix() . self::ALIAS_TABLE_NAME)
             ->where('blog_id = ' . $sql->quote(App::blog()->id()))
             ->delete();
     }
@@ -164,5 +172,37 @@ class Alias
     public static function removeBlogUrl(string $url): string
     {
         return str_replace(App::blog()->url(), '', trim($url));
+    }
+
+    /**
+     * Create Alias table.
+     */
+    public static function createTable(): bool
+    {
+        try {
+            $s = new Structure(App::con(), App::con()->prefix());
+            $s->__get(self::ALIAS_TABLE_NAME)
+                ->field('blog_id', 'varchar', 32, false)
+                ->field('alias_url', 'varchar', 255, false)
+                ->field('alias_destination', 'varchar', 255, false)
+                ->field('alias_position', 'smallint', 0, false, 1)
+                ->field('alias_redirect', 'smallint', 0, false, 0)
+
+                ->primary('pk_alias', 'blog_id', 'alias_url')
+
+                ->index('idx_alias_blog_id', 'btree', 'blog_id')
+                ->index('idx_alias_blog_id_alias_position', 'btree', 'blog_id', 'alias_position')
+
+                ->reference('fk_alias_blog', 'blog_id', 'blog', 'blog_id', 'cascade', 'cascade')
+            ;
+
+            (new Structure(App::con(), App::con()->prefix()))->synchronize($s);
+
+            return true;
+        } catch (Exception $e) {
+            App::error()->add($e->getMessage());
+
+            return false;
+        }
     }
 }

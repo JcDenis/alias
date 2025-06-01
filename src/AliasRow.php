@@ -16,19 +16,18 @@ use Dotclear\Database\MetaRecord;
  */
 class AliasRow
 {
-    public readonly string $url;
-    public readonly string $destination;
-    public readonly int $position;
-    public readonly bool $redirect;
+    public function __construct(
+        public readonly string $url, 
+        public readonly string $destination, 
+        public readonly int $position, 
+        public readonly bool $redirect
+    ) {
 
-    public function __construct(?string $url, ?string $destination, null|string|int $position, null|int|string|bool $redirect)
-    {
-        $this->url         = (string) $url;
-        $this->destination = (string) $destination;
-        $this->position    = (int) $position;
-        $this->redirect    = !empty($redirect);
     }
 
+    /**
+     * Create an alias row from record.
+     */
     public static function newFromRecord(MetaRecord $rs): AliasRow
     {
         return new self(

@@ -6,11 +6,7 @@ namespace Dotclear\Plugin\alias;
 
 use Dotclear\App;
 use Dotclear\Database\Statement\SelectStatement;
-use Dotclear\Plugin\importExport\{
-    FlatBackupItem,
-    FlatExport,
-    FlatImportV2
-};
+use Dotclear\Plugin\importExport\{ FlatBackupItem, FlatExport, FlatImportV2 };
 
 /**
  * @brief       alias plugin importExport features class.
@@ -39,9 +35,9 @@ class PluginImportExportBehaviors
 
     public static function importInitV2(FlatImportV2 $bk): void
     {
-        $bk->__set('cur_alias', App::con()->openCursor(App::con()->prefix() . Alias::ALIAS_TABLE_NAME));
-        $bk->__set('alias', new Alias());
-        $bk->__set('aliases', $bk->__get('alias')->getAliases());
+        $bk->__set('cur_alias', Alias::openAliasCursor());
+
+        $bk->__set('aliases', Alias::getAliases());
     }
 
     public static function importFullV2(bool|FlatBackupItem $line, FlatImportV2 $bk): void
@@ -65,11 +61,11 @@ class PluginImportExportBehaviors
                 if ($alias->url == $line->f('alias_url')) {
                     $found = true;
                 }
-            }
+            } 
             if ($found) {
-                $bk->__get('alias')->deleteAlias($line->f('alias_url'));
+                Alias::deleteAlias($line->f('alias_url'));
             }
-            $bk->__get('alias')->createAlias(new AliasRow($line->f('alias_url'), $line->f('alias_destination'), $line->f('alias_position'), $line->f('alias_redirect')));
+            Alias::createAlias(new AliasRow($line->f('alias_url'), $line->f('alias_destination'), (int) $line->f('alias_position'), (bool) $line->f('alias_redirect')));
         }
     }
 }
