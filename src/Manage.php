@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\alias;
 
 use Dotclear\App;
-use Dotclear\Core\Process;
+use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Core\Backend\{ Notices, Page };
 use Dotclear\Helper\Html\Form\{ Checkbox, Div, Form, Hidden, Input, Label, Link, Note, Number, Para, Submit, Text, Table, Thead, Tbody, Td, Th, Tr };
 use Dotclear\Helper\Html\Html;
@@ -19,8 +19,10 @@ use Exception;
  * @author      Jean-Christian Denis (latest)
  * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-class Manage extends Process
+class Manage
 {
+    use TraitProcess;
+
     public static function init(): bool
     {
         return self::status(My::checkContext(My::MANAGE));
