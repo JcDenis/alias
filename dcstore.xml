@@ -2,10 +2,10 @@
 <modules xmlns:da="http://dotaddict.org/da/">
   <module id="alias">
     <name>alias</name>
-    <version>2.1.1</version>
+    <version>2.1.2</version>
     <author>Olivier Meunier and contributors</author>
     <desc>Create aliases of your blog's URLs</desc>
-    <file>https://github.com/JcDenis/alias/releases/download/v2.1.1/plugin-alias.zip</file>
+    <file>https://github.com/JcDenis/alias/releases/download/v2.1.2/plugin-alias.zip</file>
     <da:dcmin>2.36</da:dcmin>
     <da:details>https://github.com/JcDenis/alias/src/branch/master/README.md</da:details>
     <da:support>https://github.com/JcDenis/alias/issues</da:support>
