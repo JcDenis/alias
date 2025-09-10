@@ -6,7 +6,9 @@ namespace Dotclear\Plugin\alias;
 
 use Dotclear\App;
 use Dotclear\Database\Statement\SelectStatement;
-use Dotclear\Plugin\importExport\{ FlatBackupItem, FlatExport, FlatImportV2 };
+use Dotclear\Plugin\importExport\FlatBackupItem;
+use Dotclear\Plugin\importExport\FlatExport;
+use Dotclear\Plugin\importExport\FlatImportV2;
 
 /**
  * @brief       alias plugin importExport features class.
@@ -27,7 +29,7 @@ class PluginImportExportBehaviors
     {
         $sql = new SelectStatement();
         $sql->columns(['alias_url', 'alias_destination', 'alias_position', 'alias_redirect'])
-            ->from($sql->as(App::con()->prefix() . Alias::ALIAS_TABLE_NAME, 'A'))
+            ->from($sql->as(App::db()->con()->prefix() . Alias::ALIAS_TABLE_NAME, 'A'))
             ->where('blog_id = ' . $sql->quote((string) $blog_id));
 
         $exp->export('alias', $sql->statement());

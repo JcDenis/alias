@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\alias;
 
 use Dotclear\App;
-use Dotclear\Database\{ Cursor, Structure };
-use Dotclear\Database\Statement\{ DeleteStatement, SelectStatement };
+use Dotclear\Database\Cursor;
+use Dotclear\Database\Statement\DeleteStatement;
+use Dotclear\Database\Statement\SelectStatement;
 use Exception;
 
 /**
@@ -40,7 +41,7 @@ class Alias
      */
     public static function openAliasCursor(): Cursor
     {
-        return App::con()->openCursor(App::con()->prefix() . self::ALIAS_TABLE_NAME);
+        return App::db()->con()->openCursor(App::db()->con()->prefix() . self::ALIAS_TABLE_NAME);
     }
 
     /**
@@ -52,7 +53,7 @@ class Alias
     {
         if (empty(self::$aliases)) {
             $sql = new SelectStatement();
-            $rs  = $sql->from(App::con()->prefix() . self::ALIAS_TABLE_NAME)
+            $rs  = $sql->from(App::db()->con()->prefix() . self::ALIAS_TABLE_NAME)
                 ->columns([
                     'alias_url',
                     'alias_destination',
@@ -83,13 +84,13 @@ class Alias
     public static function updateAliases(array $aliases): void
     {
         foreach ($aliases as $row) {
-            if (!is_a($row, AliasRow::class)) {
+            if (!is_a($row, AliasRow::class)) { // @phpstan-ignore-line
                 throw new Exception(__('Invalid aliases definitions'));
             }
         }
         usort($aliases, fn ($a, $b) => $a->position <=> $b->position);
 
-        App::con()->begin();
+        App::db()->con()->begin();
 
         try {
             self::deleteAliases();
@@ -99,9 +100,9 @@ class Alias
                 }
             }
 
-            App::con()->commit();
+            App::db()->con()->commit();
         } catch (Exception $e) {
-            App::con()->rollback();
+            App::db()->con()->rollback();
 
             throw $e;
         }
@@ -145,7 +146,7 @@ class Alias
     public static function deleteAlias(string $url): void
     {
         $sql = new DeleteStatement();
-        $sql->from(App::con()->prefix() . self::ALIAS_TABLE_NAME)
+        $sql->from(App::db()->con()->prefix() . self::ALIAS_TABLE_NAME)
             ->where('blog_id = ' . $sql->quote(App::blog()->id()))
             ->and('alias_url = ' . $sql->quote($url))
             ->delete();
@@ -157,7 +158,7 @@ class Alias
     public static function deleteAliases(): void
     {
         $sql = new DeleteStatement();
-        $sql->from(App::con()->prefix() . self::ALIAS_TABLE_NAME)
+        $sql->from(App::db()->con()->prefix() . self::ALIAS_TABLE_NAME)
             ->where('blog_id = ' . $sql->quote(App::blog()->id()))
             ->delete();
     }
@@ -180,7 +181,7 @@ class Alias
     public static function createTable(): bool
     {
         try {
-            $s = new Structure(App::con(), App::con()->prefix());
+            $s = App::db()->structure();
             $s->__get(self::ALIAS_TABLE_NAME)
                 ->field('blog_id', 'varchar', 32, false)
                 ->field('alias_url', 'varchar', 255, false)
@@ -196,7 +197,7 @@ class Alias
                 ->reference('fk_alias_blog', 'blog_id', 'blog', 'blog_id', 'cascade', 'cascade')
             ;
 
-            (new Structure(App::con(), App::con()->prefix()))->synchronize($s);
+            App::db()->structure()->synchronize($s);
 
             return true;
         } catch (Exception $e) {
