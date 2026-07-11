@@ -20,7 +20,7 @@ $this->registerModule(
     'Olivier Meunier and contributors',
     '2.1.2',
     [
-        'requires'    => [['core', '2.36']],
+        'requires'    => [['core', '2.39']],
         'permissions' => 'My',
         'type'        => 'plugin',
         'priority'    => 2,

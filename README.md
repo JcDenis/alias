@@ -4,7 +4,7 @@
 [![Release](https://img.shields.io/github/v/release/jcdenis/alias?color=lightblue)](https://github.com/JcDenis/alias/releases)
 ![Date](https://img.shields.io/github/release-date/jcdenis/alias?color=red)
 [![Dotclear](https://img.shields.io/badge/dotclear-v2.36-137bbb.svg)](https://fr.dotclear.org/download)
-[![Dotaddict](https://img.shields.io/badge/dotaddict-official-9ac123.svg)](https://plugins.dotaddict.org/dc2/details/alias)
+[![Repository](https://img.shields.io/badge/repository-official-9ac123.svg)](https://dotclear.org/plugin/detail/alias)
 [![License](https://img.shields.io/github/license/jcdenis/alias?color=white)](https://github.com/JcDenis/alias/blob/master/LICENSE)
 
 ## ABOUT
@@ -22,7 +22,7 @@ _alias_ is a plugin for the open-source web publishing software called [Dotclear
 ## USAGE
 
 First install _alias_, manualy from a zip package or from 
-Dotaddict repository. (See Dotclear's documentation to know how do this)
+Dotclear plugins repository. (See Dotclear's documentation to know how do this)
 
 You can manage your aliases from menu ''Alias'' on admin dashboard sidebar.
 
@@ -40,7 +40,7 @@ so more there are aliases, more page load is slow.
 ## LINKS
 
 * [License](https://github.com/JcDenis/alias/blob/master/LICENSE)
-* [Packages & details](https://github.com/JcDenis/alias/releases) (or on [Dotaddict](https://plugins.dotaddict.org/dc2/details/alias))
+* [Packages & details](https://github.com/JcDenis/alias/releases) (or on [Repository](https://dotclear.org/plugin/detail/alias))
 * [Sources & contributions](https://github.com/JcDenis/alias))
 * [Issues & security](https://github.com/JcDenis/alias/issues)
 
