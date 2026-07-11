@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\alias;
 
 use Dotclear\App;
-use Dotclear\Helper\Process\TraitProcess;
-use Dotclear\Core\Backend\Notices;
-use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Form\Div;
 use Dotclear\Helper\Html\Form\Form;
@@ -27,6 +24,7 @@ use Dotclear\Helper\Html\Form\Td;
 use Dotclear\Helper\Html\Form\Th;
 use Dotclear\Helper\Html\Form\Tr;
 use Dotclear\Helper\Html\Html;
+use Dotclear\Helper\Process\TraitProcess;
 use Exception;
 
 /**
@@ -77,7 +75,7 @@ class Manage
                     );
                 }
                 Alias::updateAliases($stack);
-                Notices::addSuccessNotice(__('Aliases successfully updated.'));
+                App::backend()->notices()->addSuccessNotice(__('Aliases successfully updated.'));
                 My::redirect();
             } catch (Exception $e) {
                 App::error()->add($e->getMessage());
@@ -88,7 +86,7 @@ class Manage
         if (isset($_POST['alias_url'])) {
             try {
                 Alias::createAlias(new AliasRow($_POST['alias_url'], $_POST['alias_destination'], count(Alias::getAliases()) + 1, !empty($_POST['alias_redirect'])));
-                Notices::addSuccessNotice(__('Alias successfully created.'));
+                App::backend()->notices()->addSuccessNotice(__('Alias successfully created.'));
                 My::redirect();
             } catch (Exception $e) {
                 App::error()->add($e->getMessage());
@@ -106,20 +104,20 @@ class Manage
 
         $aliases = Alias::getAliases();
         $head = App::auth()->prefs()->accessibility->nodragdrop ? '' :
-            Page::jsLoad('js/jquery/jquery-ui.custom.js') .
-            Page::jsLoad('js/jquery/jquery.ui.touch-punch.js') .
+            App::backend()->page()->jsLoad('js/jquery/jquery-ui.custom.js') .
+            App::backend()->page()->jsLoad('js/jquery/jquery.ui.touch-punch.js') .
             My::jsLoad('dragndrop');
 
-        Page::openModule(My::name(), $head);
+        App::backend()->page()->openModule(My::name(), $head);
 
         if (($_REQUEST['part'] ?? 'list') == 'new') {
             echo
-            Page::breadcrumb([
+            App::backend()->page()->breadcrumb([
                 __('Plugins')   => '',
                 My::name()      => My::manageUrl(['part' => 'list']),
                 __('New alias') => '',
             ]) .
-            Notices::getNotices() .
+            App::backend()->page()->getNotices() .
 
             (new Div())->items([
                 (new Text('h3', __('New alias'))),
@@ -163,11 +161,11 @@ class Manage
             ])->render();
         } else {
             echo
-            Page::breadcrumb([
+            App::backend()->page()->breadcrumb([
                 __('Plugins') => '',
                 My::name()    => '',
             ]) .
-            Notices::getNotices() .
+            App::backend()->page()->getNotices() .
             (new Para())
                 ->class('top-add')
                 ->items([
@@ -265,7 +263,7 @@ class Manage
             }
         }
 
-        Page::helpBlock('alias');
-        Page::closeModule();
+        App::backend()->page()->helpBlock('alias');
+        App::backend()->page()->closeModule();
     }
 }
