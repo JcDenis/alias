@@ -1,6 +1,5 @@
 # README
 
-
 [![Release](https://img.shields.io/github/v/release/jcdenis/alias?color=lightblue)](https://github.com/JcDenis/alias/releases)
 ![Date](https://img.shields.io/github/release-date/jcdenis/alias?color=red)
 [![Dotclear](https://img.shields.io/badge/dotclear-v2.36-137bbb.svg)](https://fr.dotclear.org/download)
@@ -15,7 +14,7 @@ _alias_ is a plugin for the open-source web publishing software called [Dotclear
 
 ## REQUIREMENTS
 
-* Dotclear 2.36
+* Dotclear 2.39
 * PHP 8.1+
 * Dotclear admin permission for management
 

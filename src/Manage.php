@@ -57,22 +57,24 @@ class Manage
         # Update aliases
         if (isset($_POST['a']) && is_array($_POST['a'])) {
             $order = [];
-            if (empty($_POST['alias_order']) && !empty($_POST['order'])) {
+            if (empty($_POST['alias_order']) && !empty($_POST['order']) && is_array($_POST['order'])) {
                 $order = $_POST['order'];
-                $order = array_flip($order);
-            } elseif (!empty($_POST['alias_order'])) {
-                $order = explode(',', (string) $_POST['alias_order']);
+                $order = array_flip(array_filter($order, fn ($k, $v): bool => is_string($k) && is_string($v), ARRAY_FILTER_USE_BOTH));
+            } elseif (!empty($_POST['alias_order']) && is_string($_POST['alias_order'])) {
+                $order = explode(',', $_POST['alias_order']);
             }
 
             try {
                 $stack = [];
                 foreach ($_POST['a'] as $k => $alias) {
-                    $stack[] = new AliasRow(
-                        $alias['alias_url']         ?? '',
-                        $alias['alias_destination'] ?? '',
-                        (int) (array_search($k, $order) ?: 0),
-                        !empty($alias['alias_redirect']),
-                    );
+                    if (is_array($alias)) {
+                        $stack[] = new AliasRow(
+                            is_string($alias['alias_url']) ? $alias['alias_url'] : '',
+                            is_string($alias['alias_destination']) ? $alias['alias_destination'] : '',
+                            (int) (array_search($k, $order) ?: 0),
+                            !empty($alias['alias_redirect']),
+                        );
+                    }
                 }
                 Alias::updateAliases($stack);
                 App::backend()->notices()->addSuccessNotice(__('Aliases successfully updated.'));
@@ -85,7 +87,12 @@ class Manage
         # New alias
         if (isset($_POST['alias_url'])) {
             try {
-                Alias::createAlias(new AliasRow($_POST['alias_url'], $_POST['alias_destination'], count(Alias::getAliases()) + 1, !empty($_POST['alias_redirect'])));
+                Alias::createAlias(new AliasRow(
+                    is_string($_POST['alias_url']) ? $_POST['alias_url'] : '', 
+                    is_string($_POST['alias_destination']) ? $_POST['alias_destination'] : '', 
+                    count(Alias::getAliases()) + 1, 
+                    !empty($_POST['alias_redirect'])
+                ));
                 App::backend()->notices()->addSuccessNotice(__('Alias successfully created.'));
                 My::redirect();
             } catch (Exception $e) {
@@ -103,21 +110,21 @@ class Manage
         }
 
         $aliases = Alias::getAliases();
-        $head = App::auth()->prefs()->accessibility->nodragdrop ? '' :
+        $head = App::auth()->prefs()->get('accessibility')->get('nodragdrop') ? '' :
             App::backend()->page()->jsLoad('js/jquery/jquery-ui.custom.js') .
             App::backend()->page()->jsLoad('js/jquery/jquery.ui.touch-punch.js') .
             My::jsLoad('dragndrop');
 
         App::backend()->page()->openModule(My::name(), $head);
 
-        if (($_REQUEST['part'] ?? 'list') == 'new') {
+        if (($_REQUEST['part'] ?? 'list') === 'new') {
             echo
             App::backend()->page()->breadcrumb([
                 __('Plugins')   => '',
                 My::name()      => My::manageUrl(['part' => 'list']),
                 __('New alias') => '',
             ]) .
-            App::backend()->page()->getNotices() .
+            App::backend()->notices()->getNotices() .
 
             (new Div())->items([
                 (new Text('h3', __('New alias'))),
@@ -165,7 +172,7 @@ class Manage
                 __('Plugins') => '',
                 My::name()    => '',
             ]) .
-            App::backend()->page()->getNotices() .
+            App::backend()->notices()->getNotices() .
             (new Para())
                 ->class('top-add')
                 ->items([
@@ -186,7 +193,7 @@ class Manage
                         ->class('line')
                         ->cols([
                             (new Td())
-                                ->class(['minimal', App::auth()->prefs()->accessibility->nodragdrop ? '' : 'handle'])
+                                ->class(['minimal', App::auth()->prefs()->get('accessibility')->get('nodragdrop') ? '' : 'handle'])
                                 ->items([
                                     (new Number(['order[' . $k . ']'], 1, count($aliases), $k))
                                         ->class('position')

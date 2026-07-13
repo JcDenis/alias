@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\alias;
 
 use Dotclear\App;
+use Dotclear\Database\Cursor;
 use Dotclear\Database\Statement\SelectStatement;
 use Dotclear\Plugin\importExport\FlatBackupItem;
 use Dotclear\Plugin\importExport\FlatExport;
@@ -44,11 +45,11 @@ class PluginImportExportBehaviors
 
     public static function importFullV2(bool|FlatBackupItem $line, FlatImportV2 $bk): void
     {
-        if (!is_bool($line) && $line->__name == Alias::ALIAS_TABLE_NAME) {
+        if (!is_bool($line) && $line->__name === Alias::ALIAS_TABLE_NAME && ($bk->__get('cur_alias') instanceof Cursor)) {
             $bk->__get('cur_alias')->clean();
-            $bk->__get('cur_alias')->setField('blog_id', (string) $line->f('blog_id'));
-            $bk->__get('cur_alias')->setField('alias_url', (string) $line->f('alias_url'));
-            $bk->__get('cur_alias')->setField('alias_destination', (string) $line->f('alias_destination'));
+            $bk->__get('cur_alias')->setField('blog_id', $line->f('blog_id'));
+            $bk->__get('cur_alias')->setField('alias_url', $line->f('alias_url'));
+            $bk->__get('cur_alias')->setField('alias_destination', $line->f('alias_destination'));
             $bk->__get('cur_alias')->setField('alias_position', (int) $line->f('alias_position'));
             $bk->__get('cur_alias')->setField('alias_redirect', (int) $line->f('alias_redirect'));
             $bk->__get('cur_alias')->insert();
@@ -57,17 +58,22 @@ class PluginImportExportBehaviors
 
     public static function importSingleV2(bool|FlatBackupItem $line, FlatImportV2 $bk): void
     {
-        if (!is_bool($line) && $line->__name == Alias::ALIAS_TABLE_NAME) {
+        if (!is_bool($line) && $line->__name === Alias::ALIAS_TABLE_NAME && is_array($bk->__get('aliases'))) {
             $found = false;
             foreach ($bk->__get('aliases') as $alias) {
-                if ($alias->url == $line->f('alias_url')) {
+                if (($alias instanceof AliasRow) && $alias->url === $line->f('alias_url')) {
                     $found = true;
                 }
             } 
             if ($found) {
                 Alias::deleteAlias($line->f('alias_url'));
             }
-            Alias::createAlias(new AliasRow($line->f('alias_url'), $line->f('alias_destination'), (int) $line->f('alias_position'), (bool) $line->f('alias_redirect')));
+            Alias::createAlias(new AliasRow(
+                $line->f('alias_url'), 
+                $line->f('alias_destination'), 
+                (int) $line->f('alias_position'), 
+                (bool) (int) $line->f('alias_redirect')
+            ));
         }
     }
 }

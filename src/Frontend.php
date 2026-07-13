@@ -36,18 +36,21 @@ class Frontend
             $found = $redir = false;
             $type  = '';
             $part  = $args = $_SERVER['URL_REQUEST_PART'];
+            if (!is_string($part) || !is_string($args)) {
+                $part = $args = '';
+            }
 
             // load all Aliases
             foreach (Alias::getAliases() as $alias) {
                 // multi alias using "/url/" to "destination"
-                if (@preg_match('#^/.*/$#', $alias->url) && @preg_match($alias->url, $args)) {
-                    $part  = preg_replace($alias->url, $alias->destination, $args);
+                if (preg_match('#^/.*/$#', $alias->url) && preg_match($alias->url, $args)) {
+                    $part  = (string) preg_replace($alias->url, $alias->destination, $args);
                     $found = true;
                     $redir = !empty($alias->redirect);
 
                     break;
                     // single alias using "url" to "destination"
-                } elseif ($alias->url == $args) {
+                } elseif ($alias->url === $args) {
                     $part  = $alias->destination;
                     $found = true;
                     $redir = !empty($alias->redirect);

@@ -31,9 +31,9 @@ class AliasRow
     public static function newFromRecord(MetaRecord $rs): AliasRow
     {
         return new self(
-            (string) $rs->field('alias_url'),
-            (string) $rs->field('alias_destination'),
-            (int) $rs->field('alias_position'),
+            $rs->strField('alias_url'),
+            $rs->strField('alias_destination'),
+            $rs->intField('alias_position'),
             !empty($rs->field('alias_redirect'))
         );
     }
