@@ -1,4 +1,4 @@
-alias 2.2 - xxxx.xx.xx
+alias 2.2 - 2026.08.12
 ===========================================================
 * Bump Dotclear from 2.36 to 2.39 (utility methods)
 * Code review (phpstan max)

@@ -14,7 +14,7 @@
  */
 declare(strict_types=1);
 
-if (!is_object($this) || !method_exists($this, 'registerModule') || !isset($this->id) || !is_string($this->id)) {
+if (!isset($this) || !is_object($this) || !method_exists($this, 'registerModule') || !isset($this->id) || !is_string($this->id)) {
     return;
 }
 
@@ -22,7 +22,7 @@ $this->registerModule(
     'alias',
     "Create aliases of your blog's URLs",
     'Olivier Meunier and contributors',
-    '2.1.2',
+    '2.2',
     [
         'requires'    => [['core', '2.39']],
         'permissions' => 'My',
