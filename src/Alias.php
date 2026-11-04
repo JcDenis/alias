@@ -182,7 +182,7 @@ class Alias
     {
         try {
             $s = App::db()->structure();
-            $s->__get(self::ALIAS_TABLE_NAME)
+            $s->table(self::ALIAS_TABLE_NAME)
                 ->field('blog_id', 'varchar', 32, false)
                 ->field('alias_url', 'varchar', 255, false)
                 ->field('alias_destination', 'varchar', 255, false)
