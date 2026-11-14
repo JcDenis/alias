@@ -129,6 +129,17 @@ class Alias
             throw new Exception(__('Alias destination is empty.'));
         }
 
+        $sql = new SelectStatement();
+        $rs  = $sql
+            ->column($sql->count('alias_url'))
+            ->from(App::db()->con()->prefix() . self::ALIAS_TABLE_NAME)
+            ->where('blog_id = ' . $sql->quote(App::blog()->id()))
+            ->and('alias_url = ' . $sql->quote($url))
+            ->select();
+        if (!is_null($rs) && $rs->intField(0) > 0) {
+            throw new Exception(sprintf(__('Alias URL "%s" is already used.'), $url));
+        }
+
         $cur = self::openAliasCursor();
         $cur->setField('blog_id', App::blog()->id());
         $cur->setField('alias_url', $url);
