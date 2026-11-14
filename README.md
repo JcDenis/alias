@@ -12,6 +12,8 @@ _alias_ is a plugin for the open-source web publishing software called [Dotclear
 
 > Create aliases of your blog's URLs.
 
+A [user guide in French](https://github.com/JcDenis/alias/blob/master/docs/fr/utilisation.md) is available.
+
 ## REQUIREMENTS
 
 * Dotclear 2.39
@@ -38,6 +40,7 @@ so more there are aliases, more page load is slow.
 
 ## LINKS
 
+* [User guide (in French)](https://github.com/JcDenis/alias/blob/master/docs/fr/utilisation.md)
 * [License](https://github.com/JcDenis/alias/blob/master/LICENSE)
 * [Packages & details](https://github.com/JcDenis/alias/releases) (or on [Repository](https://dotclear.org/plugin/detail/alias))
 * [Sources & contributions](https://github.com/JcDenis/alias))
