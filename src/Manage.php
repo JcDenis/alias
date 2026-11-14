@@ -247,15 +247,16 @@ class Manage
                                                         (new Th())
                                                             ->text(__('Alias destination')),
                                                         (new Th())
-                                                            ->text(__('Redrection')),
+                                                            ->text(__('Redirection')),
                                                     ]),
                                             ]),
                                         (new Tbody('alias-list'))
                                             ->rows($rows),
                                     ]),
                             ]),
-                            (new Note(__('To remove an alias, empty its URL or destination.')))
-                                ->class('form-note'),
+                            (new Note())
+                                ->class('form-note')
+                                ->text(__('To remove an alias, empty its URL or destination.')),
                             (new Para())
                                 ->items([
                                     (new Submit(['upd']))
