@@ -23,7 +23,7 @@ msgid "Aliases successfully updated."
 msgstr "Alias mis à jour avec succès."
 
 msgid "Alias successfully created."
-msgstr "Alias créer avec succès."
+msgstr "Alias créé avec succès."
 
 msgid "New alias"
 msgstr "Nouvel alias"
@@ -60,7 +60,7 @@ msgstr "Destination de l'alias"
 msgid "Alias position"
 msgstr "Position de l'alias"
 
-msgid "Redrection"
+msgid "Redirection"
 msgstr "Redirection"
 
 msgid "visible redirection to %s"
@@ -72,3 +72,5 @@ msgstr "Pour supprimer un alias, videz son URL ou sa destination."
 msgid "Aliases"
 msgstr "Alias"
 
+msgid "Alias URL \"%s\" is already used."
+msgstr "L'URL d'alias \"%s\" est déjà utilisée."
