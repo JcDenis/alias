@@ -1,19 +1,18 @@
-<p>Aliases allow you to map any URLs you create to any available resource of
-your blog.</p>
+<html>
+<head>
+  <title>Alias</title>
+</head>
 
+<body>
 <dl>
-     <dt>Alias URL</dt>
-     <dd>Alias URL is the URL you create, without your blog URL. An alias URL
-     named "aboutme" will be caught when someone call http://yourblog/aboutme
-     page.</dd>
-     
-     <dt>Alias destination</dt>
-     <dd>Alias destination is the resource your alias is pointing to. If you
-     create an alias called "aboutme" and want it to serve your static page
-     "aboutme", alias destination will be "pages/aboutme".</dd>
-     
-     <dt>Regular expressions</dt>
-     <dd>You can use regular expression by wrapping alias URL with "/";
-     ie. "/^word\/(.+)?$/". You can use captures in destination; ie.
-     "tag/$1".</dd>
+  <dt>Alias list</dt>
+  <dd>Aliases are tested in the order of the list, and the first one that matches is used. Drag a line to change the order.</dd>
+
+  <dt>Regular expressions</dt>
+  <dd>Wrap the alias URL with "/" to use a regular expression, for example "/^word\/(.+)?$/". Use captures in the destination, for example "tag/$1".</dd>
+
+  <dt>Update</dt>
+  <dd>Saves all the lines. To remove an alias, empty its URL or its destination.</dd>
 </dl>
+</body>
+</html>

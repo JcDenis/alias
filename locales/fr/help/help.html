@@ -1,20 +1,18 @@
-<p>Les alias vous permettent de définir n'importe quelle URL renvoyant le
-contenu de n'importe quelle ressource disponible de votre blog.</p>
+<html>
+<head>
+  <title>Alias</title>
+</head>
 
+<body>
 <dl>
-     <dt>URL de l'alias</dt>
-     <dd>L'URL de l'alias est l'URL que vous créez, sans l'URL du blog. Une URL
-     d'alias appelée "a-propos" sera reconnu quand quelqu'un appellera la page
-     http://votreblog/a-propos.</dd>
-     
-     <dt>Destination de l'alias</dt>
-     <dd>La destination de l'alias est la ressource dont le contenu sera
-     renvoyé par votre alias. Si vous créez un alias "a-propos" et souhaitez
-     le faire pointer sur la page statique "a-propos", la destination de
-     l'alias sera "pages/a-propos".</dd>
-     
-     <dt>Expressions rationnelles</dt>
-     <dd>Vous pouvez utiliser des expressions rationnelles en encadrant l'URL
-     de l'alias par "/", par exemple : "/^word\/(.+)?$/". Vous pouvez utiliser
-     les captures dans la destination, par exemple : "tag/$1".</dd>
+  <dt>Liste des alias</dt>
+  <dd>Les alias sont testés dans l'ordre de la liste, et le premier qui correspond est utilisé. Glissez une ligne pour changer l'ordre.</dd>
+
+  <dt>Expressions rationnelles</dt>
+  <dd>Encadrez l'URL de l'alias par "/" pour utiliser une expression rationnelle, par exemple "/^word\/(.+)?$/". Utilisez les captures dans la destination, par exemple "tag/$1".</dd>
+
+  <dt>Mise à jour</dt>
+  <dd>Enregistre toutes les lignes. Pour supprimer un alias, videz son URL ou sa destination.</dd>
 </dl>
+</body>
+</html>

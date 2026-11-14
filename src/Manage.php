@@ -271,7 +271,7 @@ class Manage
             }
         }
 
-        App::backend()->page()->helpBlock('alias');
+        App::backend()->page()->helpBlock(My::id() . '-' . (($_REQUEST['part'] ?? 'list') === 'new' ? 'new' : 'list'));
         App::backend()->page()->closeModule();
     }
 }

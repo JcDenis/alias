@@ -8,4 +8,6 @@
  * @author      Jean-Christian Denis (latest)
  * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-\Dotclear\App::backend()->resources()->set('help', 'alias', __DIR__ . '/help/help.html');
+foreach (['list' => 'help', 'new' => 'new'] as $page => $file) {
+    \Dotclear\App::backend()->resources()->set('help', 'alias-' . $page, __DIR__ . '/help/' . $file . '.html');
+}
