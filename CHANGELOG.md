@@ -1,6 +1,5 @@
 alias 2.4 - 2026.11.14
 ===========================================================
-* Add Claude to contributors
 * [fix] Show the note about removing aliases
 * [fix] Clear message when alias URL is already used
 * [fix] Include aliases in single blog export
