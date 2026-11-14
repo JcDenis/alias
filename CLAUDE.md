@@ -28,7 +28,7 @@ Required Dotclear and PHP versions: see `_define.php`.
 * `src/Uninstall.php`: cleaners for the plugin Uninstaller.
 * `js/`: `dragndrop.js`.
 * Database table `alias`.
-* Behaviors used: `urlHandlerGetArgsDocument`, `exportFullV2`, `importInitV2`, `importFullV2`, `importSingleV2`.
+* Behaviors used: `urlHandlerGetArgsDocument`, `exportFullV2`, `exportSingleV2`, `importInitV2`, `importFullV2`, `importSingleV2`.
 
 ## Pitfalls
 

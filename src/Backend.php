@@ -34,6 +34,7 @@ class Backend
 
         App::behavior()->addBehaviors([
             'exportFullV2'   => PluginImportExportBehaviors::exportFullV2(...),
+            'exportSingleV2' => PluginImportExportBehaviors::exportSingleV2(...),
             'importInitV2'   => PluginImportExportBehaviors::importInitV2(...),
             'importFullV2'   => PluginImportExportBehaviors::importFullV2(...),
             'importSingleV2' => PluginImportExportBehaviors::importSingleV2(...),
