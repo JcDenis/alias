@@ -35,6 +35,10 @@ You can manage your aliases from menu ''Alias'' on admin dashboard sidebar.
 * It can not redirect an alias to another alias. 
 * It has priority on all ohters URLs handlers, so if you create an alias of an existing page, the destination from plugin _alias_ will be used.
 
+With the plugin [ClaudetteMcp](https://github.com/JcDenis/ClaudetteMcp), an AI assistant connected to the blog
+can list the aliases (`list_aliases`) and add a simple one (`add_alias`, no regular expression, never deleting one),
+with the permissions of a blog administrator. ClaudetteMcp is not required by _alias_.
+
 Keep in mind, plugin _alias_ loads all registered aliases to test them on each page load, 
 so more there are aliases, more page load is slow.
 
