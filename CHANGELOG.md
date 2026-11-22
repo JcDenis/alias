@@ -1,3 +1,8 @@
+alias 2.4.1 - 2026.11.23
+===========================================================
+* [new] Aliases for an AI assistant connected with ClaudetteMcp (list_aliases, add_alias)
+* [new] Family of the ClaudetteMcp tools, for the keys limited to some families
+
 alias 2.4 - 2026.11.14
 ===========================================================
 * [fix] Show the note about removing aliases
