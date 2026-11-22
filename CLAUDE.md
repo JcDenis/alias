@@ -19,7 +19,7 @@ Required Dotclear and PHP versions: see `_define.php`.
 
 * `src/Alias.php`: main class.
 * `src/AliasRow.php`: decriptor class.
-* `src/ClaudetteMcp/`: tools for the plugin ClaudetteMcp (`list_aliases`, `add_alias`, never required), registered in `src/Frontend.php`
+* `src/ClaudetteMcp/`: tools for the plugin ClaudetteMcp (`list_aliases`, `add_alias`, optional dependency `ClaudetteMcp?` in `requires`), registered in `src/Frontend.php`
   with the behavior `ClaudetteMcpAddTool`. `add_alias` refuses regular expressions and the addresses `api/...` (the connector itself).
 * `src/Backend.php`: admin side: menu entry, favorites, behaviors registration.
 * `src/Frontend.php`: public side: behaviors, template tags and URL handlers registration.

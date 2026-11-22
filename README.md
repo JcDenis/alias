@@ -37,7 +37,7 @@ You can manage your aliases from menu ''Alias'' on admin dashboard sidebar.
 
 With the plugin [ClaudetteMcp](https://github.com/JcDenis/ClaudetteMcp), an AI assistant connected to the blog
 can list the aliases (`list_aliases`) and add a simple one (`add_alias`, no regular expression, never deleting one),
-with the permissions of a blog administrator. ClaudetteMcp is not required by _alias_.
+with the permissions of a blog administrator. ClaudetteMcp is optional for _alias_ (version 0.5 or later).
 
 Keep in mind, plugin _alias_ loads all registered aliases to test them on each page load, 
 so more there are aliases, more page load is slow.

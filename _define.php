@@ -24,7 +24,7 @@ $this->registerModule(
     'Olivier Meunier and contributors',
     '2.4.1',
     [
-        'requires'    => [['core', '2.39']],
+        'requires'    => [['core', '2.39'], ['ClaudetteMcp?', '0.5']],
         'permissions' => 'My',
         'type'        => 'plugin',
         'priority'    => 2,
