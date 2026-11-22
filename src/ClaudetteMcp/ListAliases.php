@@ -25,6 +25,14 @@ class ListAliases extends McpTool
         return 'list_aliases';
     }
 
+    /**
+     * Family of tools for the keys of ClaudetteMcp (string, not constant: older ClaudetteMcp versions have none).
+     */
+    public function family(): string
+    {
+        return 'extras';
+    }
+
     public function title(): string
     {
         return 'List URL aliases';
