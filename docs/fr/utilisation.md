@@ -12,6 +12,7 @@ Le visiteur tape l'alias, et le blog sert la destination, sans créer de nouvell
 * [Exemples](#exemples)
 * [Redirection visible ou non](#redirection-visible-ou-non)
 * [Modifier, ordonner et supprimer](#modifier-ordonner-et-supprimer)
+* [Avec un assistant IA](#avec-un-assistant-ia)
 * [Bon à savoir](#bon-à-savoir)
 
 ## Avant de commencer
@@ -86,6 +87,18 @@ Depuis la liste, modifiez directement les champs puis cliquez sur **Mise à jour
 Si le glisser-déposer est désactivé dans vos préférences d'accessibilité, un champ numérique permet de saisir la position de chaque ligne.
 
 **Suppression.** Pour supprimer un alias, videz son URL ou sa destination, puis cliquez sur **Mise à jour**.
+
+## Avec un assistant IA
+
+Avec le plugin [ClaudetteMcp](https://github.com/JcDenis/ClaudetteMcp), un assistant IA connecté au blog peut gérer les alias,
+si vous êtes administrateur du blog :
+
+* `list_aliases` : lister les alias dans leur ordre ;
+* `add_alias` : ajouter un alias simple, en dernier, avec ou sans redirection visible (avec par défaut).
+
+Pour la sécurité, l'assistant ne crée pas d'alias avec une expression régulière (entre « / »), qui pourrait détourner
+beaucoup d'adresses du blog : ceux-là se créent dans l'administration. Il ne modifie ni ne supprime d'alias.
+_ClaudetteMcp_ n'est pas nécessaire au fonctionnement d'_alias_.
 
 ## Bon à savoir
 

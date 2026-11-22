@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\alias;
 
+use ArrayObject;
 use Dotclear\App;
 use Dotclear\Core\Url;
 use Dotclear\Helper\Process\TraitProcess;
@@ -31,6 +32,12 @@ class Frontend
         if (!self::status()) {
             return false;
         }
+
+        // Tools for AI assistants connected to the blog with the plugin ClaudetteMcp (never required)
+        App::behavior()->addBehavior('ClaudetteMcpAddTool', function (ArrayObject $tools): void {
+            $tools->append(new ClaudetteMcp\ListAliases());
+            $tools->append(new ClaudetteMcp\AddAlias());
+        });
 
         App::behavior()->addBehavior('urlHandlerGetArgsDocument', function (Url $handler): void {
             $found = $redir = false;

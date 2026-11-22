@@ -19,6 +19,8 @@ Required Dotclear and PHP versions: see `_define.php`.
 
 * `src/Alias.php`: main class.
 * `src/AliasRow.php`: decriptor class.
+* `src/ClaudetteMcp/`: tools for the plugin ClaudetteMcp (`list_aliases`, `add_alias`, never required), registered in `src/Frontend.php`
+  with the behavior `ClaudetteMcpAddTool`. `add_alias` refuses regular expressions and the addresses `api/...` (the connector itself).
 * `src/Backend.php`: admin side: menu entry, favorites, behaviors registration.
 * `src/Frontend.php`: public side: behaviors, template tags and URL handlers registration.
 * `src/Install.php`: install and update, database structure (a change needs a migration here).
@@ -28,7 +30,7 @@ Required Dotclear and PHP versions: see `_define.php`.
 * `src/Uninstall.php`: cleaners for the plugin Uninstaller.
 * `js/`: `dragndrop.js`.
 * Database table `alias`.
-* Behaviors used: `urlHandlerGetArgsDocument`, `exportFullV2`, `exportSingleV2`, `importInitV2`, `importFullV2`, `importSingleV2`.
+* Behaviors used: `ClaudetteMcpAddTool`, `urlHandlerGetArgsDocument`, `exportFullV2`, `exportSingleV2`, `importInitV2`, `importFullV2`, `importSingleV2`.
 
 ## Pitfalls
 
